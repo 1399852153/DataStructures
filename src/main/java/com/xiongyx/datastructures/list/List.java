@@ -68,5 +68,5 @@ public interface List <E> {
      * @return      返回"obj"元素在列表中的下标值;
      *               "obj"不存在于列表中，返回-1;
      */
-    int indexof(Object obj);
+    int indexOf(Object obj);
 }
