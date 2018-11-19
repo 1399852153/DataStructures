@@ -20,6 +20,11 @@ public class ArrayList <E> implements List <E>{
     private static final int DEFAULT_CAPACITY = 16;
 
     /**
+     * 扩容翻倍的基数
+     * */
+    private static final double EXPAND_BASE = 1.5;
+
+    /**
      * 内部数组的实际大小
      * */
     private int capacity;
@@ -63,6 +68,29 @@ public class ArrayList <E> implements List <E>{
         }
     }
 
+    /**
+     * 内部数组扩容检查
+     * */
+    private void expandCheck(){
+        //:::如果当前元素个数 = 当前内部数组容量
+        if(this.size == this.capacity){
+            //:::需要扩容
+
+            //:::先暂存之前内部数组的引用
+            Object[] tempArray = this.elements;
+            //:::当前内部数组扩充 一定的倍数
+            this.capacity = (int)(this.capacity * EXPAND_BASE);
+            this.elements = new Object[this.capacity];
+
+            //:::为了代码的可读性，使用for循环实现新老数组的copy操作
+            for(int i=0; i<tempArray.length; i++){
+                this.elements[i] = tempArray[i];
+            }
+            //:::Tips: 比起for循环，arraycopy基于native的内存批量复制在内部数组数据量较大时具有更高的执行效率
+            //System.arraycopy(tempArray, 0, elements, 0, tempArray.length);
+        }
+    }
+
     //=================================================外部接口=======================================================
     /**
      * 返回线性表 内部元素的个数
@@ -89,12 +117,39 @@ public class ArrayList <E> implements List <E>{
      * */
     @Override
     public boolean add(E e) {
-        return false;
+        //:::插入新数据前进行扩容检查
+        expandCheck();
+
+        //;::在末尾插入元素
+        this.elements[this.size] = e;
+        //:::size自增
+        this.size++;
+
+        return true;
     }
 
+    /**
+     * 在线性表的下标为"index"位置处插入元素"e"
+     * @param index 插入位置的下标
+     * @param e     需要插入的元素
+     */
     @Override
-    public void add(int index, Object o) {
+    public void add(int index, E e) {
+        //:::数组下标越界检查
+        rangeCheck(index);
+        //:::插入新数据前进行扩容检查
+        expandCheck();
 
+        //:::插入位置下标之后的元素整体向后移动一位(防止数据被覆盖，并且保证数据在数组中的下标顺序)
+        for(int i=this.size; i>index; i--){
+            this.elements[i] = this.elements[i-1];
+        }
+        //:::Tips: 比起for循环，arraycopy基于native的内存批量复制在内部数组数据量较大时具有更高的执行效率
+
+        //:::在index下标位置处插入元素"e"
+        this.elements[index] = e;
+        //:::size自增
+        this.size++;
     }
 
     @Override
