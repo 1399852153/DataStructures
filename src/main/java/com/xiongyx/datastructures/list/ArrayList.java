@@ -64,7 +64,7 @@ public class ArrayList <E> implements List <E>{
      * @param index 下标值
      */
     private void rangeCheckForAdd(int index){
-        //:::如果下标小于0或者超过了最大值，抛出异常
+        //:::如果下标小于0或者大于size的值，抛出异常
         if(index > this.size || index < 0){
             throw new RuntimeException("index error  index=" + index + " size=" + this.size) ;
         }
@@ -75,7 +75,7 @@ public class ArrayList <E> implements List <E>{
      * @param index 下标值
      */
     private void rangeCheck(int index){
-        //:::如果下标小于0或者超过了最大值，抛出异常
+        //:::如果下标小于0或者大于等于size的值，抛出异常
         if(index >= this.size || index < 0){
             throw new RuntimeException("index error  index=" + index + " size=" + this.size) ;
         }
