@@ -4,7 +4,7 @@ package com.xiongyx.datastructures.list;
  * @Author xiongyx
  * on 2018/11/17.
  *
- * 列表接口 线性表实现
+ * 列表---线性表实现
  */
 public class ArrayList <E> implements List <E>{
 
@@ -58,12 +58,23 @@ public class ArrayList <E> implements List <E>{
 
     //===============================================内部辅助方法===================================================
     /**
+     * 插入时,下标越界检查
+     * @param index 下标值
+     */
+    private void rangeCheckForAdd(int index){
+        //:::如果下标小于0或者超过了最大值，抛出异常
+        if(index > this.size || index < 0){
+            throw new RuntimeException("index error  index=" + index + " size=" + this.size) ;
+        }
+    }
+
+    /**
      * 下标越界检查
      * @param index 下标值
      */
     private void rangeCheck(int index){
         //:::如果下标小于0或者超过了最大值，抛出异常
-        if(index > this.size || index < 0){
+        if(index >= this.size || index < 0){
             throw new RuntimeException("index error  index=" + index + " size=" + this.size) ;
         }
     }
@@ -83,11 +94,10 @@ public class ArrayList <E> implements List <E>{
             this.elements = new Object[this.capacity];
 
             //:::为了代码的可读性，使用for循环实现新老数组的copy操作
+            //:::Tips: 比起for循环，arraycopy基于native的内存批量复制在内部数组数据量较大时具有更高的执行效率
             for(int i=0; i<tempArray.length; i++){
                 this.elements[i] = tempArray[i];
             }
-            //:::Tips: 比起for循环，arraycopy基于native的内存批量复制在内部数组数据量较大时具有更高的执行效率
-            //System.arraycopy(tempArray, 0, elements, 0, tempArray.length);
         }
     }
 
@@ -108,6 +118,41 @@ public class ArrayList <E> implements List <E>{
     @Override
     public boolean isEmpty() {
         return this.size == 0;
+    }
+
+    @Override
+    public int indexOf(E e) {
+        //:::判断当前参数是否为null
+        if(e != null){
+            //::::参数不为null
+            //:::从前到后依次比对
+            for(int i=0; i<this.size; i++){
+                //:::判断当前item是否 equals 参数e
+                if(e.equals(elements[i])){
+                    //:::匹配成功，立即返回当前下标
+                    return i;
+                }
+            }
+        }else{
+            //:::参数为null
+            //:::从前到后依次比对
+            for(int i=0; i<this.size; i++){
+                //:::判断当前item是否为null
+                if(this.elements[i] == null){
+                    //:::为null，立即返回当前下标
+                    return i;
+                }
+            }
+        }
+
+        //:::遍历列表未找到相等的元素，返回特殊值"-1"代表未找到
+        return -1;
+    }
+
+    @Override
+    public boolean contains(E e) {
+        //:::复用indexOf方法,如果返回-1代表不存在;反之，则代表存在
+        return (indexOf(e) != -1);
     }
 
     /**
@@ -135,16 +180,16 @@ public class ArrayList <E> implements List <E>{
      */
     @Override
     public void add(int index, E e) {
-        //:::数组下标越界检查
-        rangeCheck(index);
+        //:::插入时，数组下标越界检查
+        rangeCheckForAdd(index);
         //:::插入新数据前进行扩容检查
         expandCheck();
 
         //:::插入位置下标之后的元素整体向后移动一位(防止数据被覆盖，并且保证数据在数组中的下标顺序)
+        //:::Tips: 比起for循环，arraycopy基于native的内存批量复制在内部数组数据量较大时具有更高的执行效率
         for(int i=this.size; i>index; i--){
             this.elements[i] = this.elements[i-1];
         }
-        //:::Tips: 比起for循环，arraycopy基于native的内存批量复制在内部数组数据量较大时具有更高的执行效率
 
         //:::在index下标位置处插入元素"e"
         this.elements[index] = e;
@@ -153,27 +198,110 @@ public class ArrayList <E> implements List <E>{
     }
 
     @Override
-    public boolean remove(Object obj) {
-        return false;
-    }
-
-    @Override
     public E remove(int index) {
+        //:::数组下标越界检查
+        rangeCheck(index);
+
+        //:::将删除下标位置之后的数据整体前移一位
+        //:::Tips: 比起for循环，arraycopy基于native的内存批量复制在内部数组数据量较大时具有更高的执行效率
+        for(int i=index+1; i<this.size; i++){
+            this.elements[i-1] = this.elements[i];
+        }
+
+        //:::由于数据整体前移了一位，释放列表末尾的引用，增加GC效率
+        this.elements[(this.size - 1)] = null;
+        //:::size自减
+        this.size--;
+
         return null;
     }
 
     @Override
-    public E set(int index, Object o) {
-        return null;
+    public boolean remove(E e) {
+        //:::获得当前参数"e"的下标位置
+        int index = indexOf(e);
+
+        //:::如果返回-1，代表不存在
+        if(index != -1){
+            //:::删除下标对应位置的数据
+            remove(index);
+            //:::返回true，代表删除成功
+            return true;
+        }else{
+            //:::不进行删除
+            //:::返回false,代表删除失败
+            return false;
+        }
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public E set(int index, E e) {
+        //:::数组下标越界检查
+        rangeCheck(index);
+
+        //:::先暂存之前index下标处元素的引用
+        E oldValue = (E)this.elements[index];
+        //:::将index下标元素设置为参数"e"
+        this.elements[index] = e;
+
+        //:::返回被替换掉的元素
+        return oldValue;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
     public E get(int index) {
-        return null;
+        //:::数组下标越界检查
+        rangeCheck(index);
+
+        //:::返回对应下标的元素
+        return (E)this.elements[index];
     }
 
     @Override
-    public int indexOf(Object obj) {
-        return 0;
+    public void clear() {
+        //:::遍历列表，释放内部元素引用，增加GC效率
+        for(int i=0; i<this.size; i++){
+            this.elements[i] = null;
+        }
+
+        //:::将size重置为0
+        this.size = 0;
+    }
+
+    /**
+     * 收缩内部数组，使得"内部数组的大小"和"线性表逻辑大小"相匹配，提高空间利用率
+     * */
+    public void trimToSize(){
+        //:::如果当前线性表逻辑长度 小于 内部数组的大小
+        if(this.size < this.capacity){
+            //:::创建一个和当前线性表逻辑大小相等的新数组
+            Object[] newElements = new Object[this.size];
+
+            //:::将当前旧内部数组的数据复制到新数组中
+            //:::Tips: 这里使用Arrays.copy方法进行复制,效率更高
+            for(int i = 0; i< newElements.length; i++){
+                newElements[i] = this.elements[i];
+            }
+            //:::用新数组替换掉之前老的内部数组
+            this.elements = newElements;
+        }
+    }
+
+    @Override
+    public String toString(){
+        //:::列表起始使用"["
+        StringBuilder s = new StringBuilder("[");
+
+        //:::从第一个到倒数第二个元素之间
+        for(int i=0; i<size-1; i++){
+            //:::使用", "进行分割
+            s.append(elements[i]).append(",").append(" ");
+        }
+
+        //:::最后一个元素使用"]"结尾
+        s.append(elements[size - 1]).append("]");
+        return s.toString();
     }
 }

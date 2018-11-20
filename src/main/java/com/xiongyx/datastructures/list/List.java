@@ -20,6 +20,21 @@ public interface List <E> {
     boolean isEmpty();
 
     /**
+     * 返回元素"e"在列表中的下标值
+     * @param e     查询的元素"e"
+     * @return      返回"obj"元素在列表中的下标值;
+     *               "obj"不存在于列表中，返回-1;
+     */
+    int indexOf(E e);
+
+    /**
+     * 判断元素"e"是否存在于列表中
+     * @param e     查询的元素"e"
+     * @return      返回"true"代表存在，返回"false"代表不存在;
+     */
+    boolean contains(E e);
+
+    /**
      * 在列表的末尾插入元素"e"
      * @param e 需要插入的元素
      * @return  插入成功，返回true；否则返回false
@@ -34,18 +49,18 @@ public interface List <E> {
     void add(int index, E e);
 
     /**
-     *  从列表中找到并且移除"obj"对象
-     * @param obj   需要被移除的元素"obj"
-     * @return      找到并且成功移除返回true；否则返回false
-     */
-    boolean remove(Object obj);
-
-    /**
      * 移除列表中下标为"index"位置处的元素
      * @param index  需要被移除元素的下标
      * @return      返回被移除的元素
      */
     E remove(int index);
+
+    /**
+     *  从列表中找到并且移除"e"对象
+     * @param e   需要被移除的元素"e"
+     * @return      找到并且成功移除返回true；否则返回false
+     */
+    boolean remove(E e);
 
     /**
      * 将列表中下标为"index"位置处的元素替代为"e"
@@ -63,10 +78,7 @@ public interface List <E> {
     E get(int index);
 
     /**
-     * 返回"obj"元素在列表中的下标值
-     * @param obj   查询的obj元素
-     * @return      返回"obj"元素在列表中的下标值;
-     *               "obj"不存在于列表中，返回-1;
-     */
-    int indexOf(Object obj);
+     * 清除列表中所有元素
+     * */
+    void clear();
 }
