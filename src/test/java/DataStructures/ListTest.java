@@ -1,6 +1,7 @@
 package DataStructures;
 
 
+import com.xiongyx.datastructures.iterator.Iterator;
 import com.xiongyx.datastructures.list.ArrayList;
 
 /**
@@ -9,15 +10,32 @@ import com.xiongyx.datastructures.list.ArrayList;
 public class ListTest {
 
     public static void main(String[] args){
-        ArrayList<Integer> arrayList = new ArrayList<>();
-        arrayList.add(1);
-        arrayList.add(2);
-        arrayList.add(3);
-        arrayList.add(4);
-        arrayList.add(5);
+        testArrayList();
+    }
 
-        System.out.println(arrayList);
-        arrayList.remove(3);
-        System.out.println(arrayList);
+    private static void testArrayList(){
+        ArrayList<Integer> arrayList = new ArrayList<>();
+
+        for(int i=0; i<20; i++){
+            arrayList.add(i);
+        }
+        System.out.println("init: " + arrayList);
+
+
+//        for(int i=0; i<arrayList.size(); i++){
+//            if(arrayList.indexOf(i)%10 == 0){
+//                arrayList.remove(i);
+//            }
+//        }
+//        System.out.println("remove to forEach: " + arrayList);
+
+        Iterator<Integer> iterator = arrayList.iterator();
+        while(iterator.hasNext()){
+            int item = iterator.next();
+            if(item%3 == 0){
+                iterator.remove();
+            }
+        }
+        System.out.println("remove to forEach: " + arrayList);
     }
 }

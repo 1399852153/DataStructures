@@ -1,5 +1,7 @@
 package com.xiongyx.datastructures.list;
 
+import com.xiongyx.datastructures.iterator.Iterator;
+
 /**
  * @Author xiongyx
  * on 2018/11/17.
@@ -286,6 +288,8 @@ public class ArrayList <E> implements List <E>{
             }
             //:::用新数组替换掉之前老的内部数组
             this.elements = newElements;
+            //:::设置容量
+            this.capacity = this.size;
         }
     }
 
@@ -308,5 +312,56 @@ public class ArrayList <E> implements List <E>{
         //:::最后一个元素使用"]"结尾
         s.append(elements[size - 1]).append("]");
         return s.toString();
+    }
+
+    //===============================================迭代器相关==============================================
+    /**
+     * 获得线性表 迭代器
+     * */
+    @Override
+    public Iterator<E> iterator() {
+        return new Itr();
+    }
+
+    /**
+     * 线性表 迭代器内部类
+     * */
+    private class Itr implements Iterator<E>{
+        /**
+         * 迭代器下一个元素 指针下标
+         */
+        private int nextIndex = 0;
+        /**
+         * 迭代器当前元素 指针下标
+         * */
+        private int currentIndex = -1;
+
+        @Override
+        public boolean hasNext() {
+            //:::如果"下一个元素指针下标" 小于 "当前线性表长度" ==> 说明迭代还未结束
+            return this.nextIndex < ArrayList.this.size;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public E next() {
+            //:::当前元素指针下标 = 下一个元素指针下标
+            this.currentIndex = nextIndex;
+            //:::下一个元素指针下标自增,指向下一元素
+            this.nextIndex++;
+
+            //:::返回当前元素
+            return (E)ArrayList.this.elements[this.currentIndex];
+        }
+
+        @Override
+        public void remove() {
+            //:::删除当前元素
+            ArrayList.this.remove(this.currentIndex);
+            //:::由于删除了当前下标元素，数据段整体向前平移，因此nextIndex不用自增
+
+            //:::为了防止用户在一次迭代(next调用)中多次使用remove方法，将currentIndex设置为-1
+            this.currentIndex = -1;
+        }
     }
 }

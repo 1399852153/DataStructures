@@ -1,5 +1,7 @@
 package com.xiongyx.datastructures.list;
 
+import com.xiongyx.datastructures.iterator.Iterator;
+
 /**
  * @Author xiongyx
  * on 2018/11/18.
@@ -81,4 +83,9 @@ public interface List <E> {
      * 清除列表中所有元素
      * */
     void clear();
+
+    /**
+     * 获得迭代器
+     * */
+    Iterator<E> iterator();
 }
