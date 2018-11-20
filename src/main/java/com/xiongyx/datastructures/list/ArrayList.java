@@ -291,6 +291,11 @@ public class ArrayList <E> implements List <E>{
 
     @Override
     public String toString(){
+        //:::空列表
+        if(this.isEmpty()){
+            return "[]";
+        }
+
         //:::列表起始使用"["
         StringBuilder s = new StringBuilder("[");
 
