@@ -65,6 +65,7 @@ public class ArrayList <E> implements List <E>{
      */
     private void rangeCheckForAdd(int index){
         //:::如果下标小于0或者大于size的值，抛出异常
+        //:::注意：插入时，允许插入线性表的末尾，因此(index == size)是合法的
         if(index > this.size || index < 0){
             throw new RuntimeException("index error  index=" + index + " size=" + this.size) ;
         }
@@ -93,10 +94,11 @@ public class ArrayList <E> implements List <E>{
             Object[] tempArray = this.elements;
             //:::当前内部数组扩充 一定的倍数
             this.capacity = (int)(this.capacity * EXPAND_BASE);
+            //:::内部数组指向扩充了容量的新数组
             this.elements = new Object[this.capacity];
 
             //:::为了代码的可读性，使用for循环实现新老数组的copy操作
-            //:::Tips: 比起for循环，arraycopy基于native的内存批量复制在内部数组数据量较大时具有更高的执行效率
+            //:::Tips: 比起for循环，System.arraycopy基于native的内存批量复制在内部数组数据量较大时具有更高的执行效率
             for(int i=0; i<tempArray.length; i++){
                 this.elements[i] = tempArray[i];
             }
@@ -119,7 +121,7 @@ public class ArrayList <E> implements List <E>{
      * */
     @Override
     public boolean isEmpty() {
-        return this.size == 0;
+        return (this.size == 0);
     }
 
     @Override
@@ -188,7 +190,7 @@ public class ArrayList <E> implements List <E>{
         expandCheck();
 
         //:::插入位置下标之后的元素整体向后移动一位(防止数据被覆盖，并且保证数据在数组中的下标顺序)
-        //:::Tips: 比起for循环，arraycopy基于native的内存批量复制在内部数组数据量较大时具有更高的执行效率
+        //:::Tips: 比起for循环，System.arraycopy基于native的内存批量复制在内部数组数据量较大时具有更高的执行效率
         for(int i=this.size; i>index; i--){
             this.elements[i] = this.elements[i-1];
         }
@@ -200,22 +202,27 @@ public class ArrayList <E> implements List <E>{
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public E remove(int index) {
         //:::数组下标越界检查
         rangeCheck(index);
 
+        //:::先暂存将要被移除的元素
+        E willBeRemoved = (E)this.elements[index];
+
         //:::将删除下标位置之后的数据整体前移一位
-        //:::Tips: 比起for循环，arraycopy基于native的内存批量复制在内部数组数据量较大时具有更高的执行效率
+        //:::Tips: 比起for循环，System.arraycopy基于native的内存批量复制在内部数组数据量较大时具有更高的执行效率
         for(int i=index+1; i<this.size; i++){
             this.elements[i-1] = this.elements[i];
         }
 
-        //:::由于数据整体前移了一位，释放列表末尾的引用，增加GC效率
+        //:::由于数据整体前移了一位，释放列表末尾的失效引用，增加GC效率
         this.elements[(this.size - 1)] = null;
         //:::size自减
         this.size--;
 
-        return null;
+        //:::返回被删除的元素
+        return willBeRemoved;
     }
 
     @Override
@@ -223,7 +230,7 @@ public class ArrayList <E> implements List <E>{
         //:::获得当前参数"e"的下标位置
         int index = indexOf(e);
 
-        //:::如果返回-1，代表不存在
+        //:::如果存在
         if(index != -1){
             //:::删除下标对应位置的数据
             remove(index);
@@ -288,7 +295,7 @@ public class ArrayList <E> implements List <E>{
             }
             //:::用新数组替换掉之前老的内部数组
             this.elements = newElements;
-            //:::设置容量
+            //:::设置当前容量
             this.capacity = this.size;
         }
     }

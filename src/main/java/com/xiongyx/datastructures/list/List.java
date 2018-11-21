@@ -51,18 +51,18 @@ public interface List <E> {
     void add(int index, E e);
 
     /**
-     * 移除列表中下标为"index"位置处的元素
-     * @param index  需要被移除元素的下标
-     * @return      返回被移除的元素
-     */
-    E remove(int index);
-
-    /**
      *  从列表中找到并且移除"e"对象
      * @param e   需要被移除的元素"e"
      * @return      找到并且成功移除返回true；否则返回false
      */
     boolean remove(E e);
+
+    /**
+     * 移除列表中下标为"index"位置处的元素
+     * @param index  需要被移除元素的下标
+     * @return      返回被移除的元素
+     */
+    E remove(int index);
 
     /**
      * 将列表中下标为"index"位置处的元素替代为"e"
