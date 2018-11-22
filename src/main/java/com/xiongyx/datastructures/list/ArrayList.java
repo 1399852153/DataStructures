@@ -115,7 +115,7 @@ public class ArrayList <E> implements List <E>{
     }
 
     /**
-     * 线性表 是否为空
+     * 向量 是否为空
      * @return true: 为空;
      *          false: 不为空;
      * */
@@ -331,7 +331,7 @@ public class ArrayList <E> implements List <E>{
     }
 
     /**
-     * 线性表 迭代器内部类
+     * 向量 迭代器内部类
      * */
     private class Itr implements Iterator<E>{
         /**
@@ -365,7 +365,7 @@ public class ArrayList <E> implements List <E>{
         public void remove() {
             //:::删除当前元素
             ArrayList.this.remove(this.currentIndex);
-            //:::由于删除了当前下标元素，数据段整体向前平移，因此nextIndex不用自增
+            //:::由于删除了当前下标元素，数据段整体向前平移一位，因此nextIndex不用自增
 
             //:::为了防止用户在一次迭代(next调用)中多次使用remove方法，将currentIndex设置为-1
             this.currentIndex = -1;
