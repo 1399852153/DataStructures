@@ -41,9 +41,10 @@ public class ArrayList <E> implements List <E>{
      * 默认的无参构造方法
      * */
     public ArrayList() {
+        this.capacity = DEFAULT_CAPACITY;
         size = 0;
         //:::设置数组大小为默认
-        elements = new Object[DEFAULT_CAPACITY];
+        elements = new Object[capacity];
     }
 
     /**
