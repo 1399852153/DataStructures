@@ -6,7 +6,7 @@ import com.xiongyx.datastructures.iterator.Iterator;
  * @Author xiongyx
  * on 2018/11/17.
  *
- * 列表---线性表实现
+ * 列表---向量实现
  */
 public class ArrayList <E> implements List <E>{
 
