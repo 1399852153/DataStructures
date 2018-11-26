@@ -1,5 +1,6 @@
 package com.xiongyx.datastructures.list;
 
+import com.xiongyx.datastructures.exception.IteratorStateErrorException;
 import com.xiongyx.datastructures.exception.NegativeOfIndexException;
 import com.xiongyx.datastructures.exception.OutOfIndexBoundException;
 import com.xiongyx.datastructures.iterator.Iterator;
@@ -378,6 +379,10 @@ public class LinkedList <E> implements List <E>{
          * 初始化指向 头部哨兵节点
          * */
         private Node<E> currentNode = LinkedList.this.first;
+        /**
+         * 最近一次迭代返回的数据
+         * */
+        private Node<E> lastReturned;
 
         @Override
         public boolean hasNext() {
@@ -390,17 +395,27 @@ public class LinkedList <E> implements List <E>{
             //:::指向当前节点的下一个节点
             this.currentNode = this.currentNode.right;
 
+            //:::设置最近一次返回的节点
+            this.lastReturned = currentNode;
+
             //:::返回当前节点的data
             return this.currentNode.data;
         }
 
         @Override
         public void remove() {
+            if(this.lastReturned == null){
+                throw new IteratorStateErrorException("迭代器状态异常: 可能在一次迭代中进行了多次remove操作");
+            }
+
             //:::当前光标指向的节点要被删除,先暂存引用
             Node<E> nodeWillRemove = this.currentNode;
 
             //:::由于当前节点需要被删除,因此光标前移,指向当前节点的上一个节点
             this.currentNode = this.currentNode.left;
+
+            //:::移除操作需要将最近一次返回设置为null，防止多次remove
+            this.lastReturned = null;
 
             //:::将节点从链表中移除
             nodeWillRemove.unlinkSelf();

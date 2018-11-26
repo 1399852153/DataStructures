@@ -1,7 +1,7 @@
 package com.xiongyx.datastructures.exception;
 
 /**
- * 下标负数异常
+ * 下标负数 异常
  * */
 public class NegativeOfIndexException extends RuntimeException{
 

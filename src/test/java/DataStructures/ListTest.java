@@ -1,6 +1,7 @@
 package DataStructures;
 
 
+import com.xiongyx.datastructures.iterator.Iterator;
 import com.xiongyx.datastructures.list.LinkedList;
 
 /**
@@ -14,30 +15,24 @@ public class ListTest {
 
     private static void testArrayList(){
         LinkedList<Integer> list = new LinkedList<>();
-        System.out.println(list);
-        boolean b1 = list.isEmpty();
-        list.add(1);
-        list.add(2);
-        list.add(3);
-        list.add(4);
-        list.add(5);
-        list.add(0,10);
+        for(int i=0; i<20; i++){
+            list.add(i);
+        }
 
         System.out.println(list);
-        list.remove(4);
-        System.out.println(list);
 
-        int i1 = list.indexOf(10);
-        int i2 = list.indexOf(100);
-        list.set(1,100);
-        System.out.println(list);
 
-        int i3 = list.indexOf(100);
-        boolean b2 = list.isEmpty();
-        list.get(0);
-        list.clear();
-        boolean b3 = list.isEmpty();
-        System.out.println(list);
+        Iterator<Integer> iterator = list.iterator();
+        while (iterator.hasNext()){
+            int data = iterator.next();
+            if(data % 3 == 0){
+                iterator.remove();
 
+                System.out.print("移除了:" + data);
+                System.out.println(list);
+            }
+        }
+
+        System.out.println(list);
     }
 }
