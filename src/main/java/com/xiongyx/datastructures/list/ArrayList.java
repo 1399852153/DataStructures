@@ -2,9 +2,6 @@ package com.xiongyx.datastructures.list;
 
 import com.xiongyx.datastructures.iterator.Iterator;
 
-import java.util.Arrays;
-import java.util.Objects;
-
 /**
  * @Author xiongyx
  * on 2018/11/17.
