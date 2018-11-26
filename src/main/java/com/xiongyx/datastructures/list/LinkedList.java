@@ -1,5 +1,7 @@
 package com.xiongyx.datastructures.list;
 
+import com.xiongyx.datastructures.exception.NegativeOfIndexException;
+import com.xiongyx.datastructures.exception.OutOfIndexBoundException;
 import com.xiongyx.datastructures.iterator.Iterator;
 
 /**
@@ -42,10 +44,14 @@ public class LinkedList <E> implements List <E>{
      * @param index 下标值
      */
     private void rangeCheckForAdd(int index){
-        //:::如果下标小于0或者大于size的值,抛出异常
+        //:::如果大于size的值,抛出异常
         //:::注意：插入时,允许插入线性表的末尾,因此(index == size)是合法的
-        if(index > this.size || index < 0){
-            throw new RuntimeException("index error  index=" + index + " size=" + this.size) ;
+        if(index > this.size){
+            throw new OutOfIndexBoundException("index error  index=" + index + " size=" + this.size) ;
+        }
+
+        if(index < 0){
+            throw new NegativeOfIndexException("index error  index=" + index + " size=" + this.size) ;
         }
     }
 
@@ -54,9 +60,13 @@ public class LinkedList <E> implements List <E>{
      * @param index 下标值
      */
     private void rangeCheck(int index){
-        //:::如果下标小于0或者大于等于size的值,抛出异常
-        if(index >= this.size || index < 0){
-            throw new RuntimeException("index error  index=" + index + " size=" + this.size) ;
+        //:::如果大于等于size的值,抛出异常
+        if(index >= this.size){
+            throw new OutOfIndexBoundException("index error  index=" + index + " size=" + this.size) ;
+        }
+
+        if(index < 0){
+            throw new NegativeOfIndexException("index error  index=" + index + " size=" + this.size) ;
         }
     }
 
