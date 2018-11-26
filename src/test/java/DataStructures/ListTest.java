@@ -14,6 +14,7 @@ public class ListTest {
 
     private static void testArrayList(){
         LinkedList<Integer> list = new LinkedList<>();
+        System.out.println(list);
         boolean b1 = list.isEmpty();
         list.add(1);
         list.add(2);
@@ -22,15 +23,21 @@ public class ListTest {
         list.add(5);
         list.add(0,10);
 
+        System.out.println(list);
         list.remove(4);
+        System.out.println(list);
 
         int i1 = list.indexOf(10);
         int i2 = list.indexOf(100);
         list.set(1,100);
+        System.out.println(list);
+
         int i3 = list.indexOf(100);
         boolean b2 = list.isEmpty();
         list.get(0);
         list.clear();
         boolean b3 = list.isEmpty();
+        System.out.println(list);
+
     }
 }

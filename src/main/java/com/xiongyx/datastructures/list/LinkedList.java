@@ -42,8 +42,8 @@ public class LinkedList <E> implements List <E>{
      * @param index 下标值
      */
     private void rangeCheckForAdd(int index){
-        //:::如果下标小于0或者大于size的值，抛出异常
-        //:::注意：插入时，允许插入线性表的末尾，因此(index == size)是合法的
+        //:::如果下标小于0或者大于size的值,抛出异常
+        //:::注意：插入时,允许插入线性表的末尾,因此(index == size)是合法的
         if(index > this.size || index < 0){
             throw new RuntimeException("index error  index=" + index + " size=" + this.size) ;
         }
@@ -54,7 +54,7 @@ public class LinkedList <E> implements List <E>{
      * @param index 下标值
      */
     private void rangeCheck(int index){
-        //:::如果下标小于0或者大于等于size的值，抛出异常
+        //:::如果下标小于0或者大于等于size的值,抛出异常
         if(index >= this.size || index < 0){
             throw new RuntimeException("index error  index=" + index + " size=" + this.size) ;
         }
@@ -65,7 +65,7 @@ public class LinkedList <E> implements List <E>{
      * */
     private Node<E> find(int index){
         //:::要求调用该方法前,已经进行了下标越界校验
-        //:::出于效率的考虑，不进行重复校验
+        //:::出于效率的考虑,不进行重复校验
 
         Node<E> currentNode = this.first.right;
         for(int i=0; i<index; i++){
@@ -90,7 +90,7 @@ public class LinkedList <E> implements List <E>{
     @Override
     public int indexOf(E e) {
         //:::当前节点 = 列表头部哨兵
-        Node currentNode = this.first;
+        Node<E> currentNode = this.first;
 
         if(e != null){
             //:::如果不是查询空元素
@@ -99,7 +99,7 @@ public class LinkedList <E> implements List <E>{
             for(int i=0; i<this.size; i++){
                 //:::不断切换当前节点 ==> "当前节点 = 当前节点的右节点"
                 currentNode = currentNode.right;
-                //:::如果满足要求（注意: equals顺序不能反，否则可能出现currentNode.data为空,出现空指针异常）
+                //:::如果满足要求（注意: equals顺序不能反,否则可能出现currentNode.data为空,出现空指针异常）
                 if(e.equals(currentNode.data)){
                     //:::返回下标
                     return i;
@@ -120,13 +120,13 @@ public class LinkedList <E> implements List <E>{
             }
         }
 
-        //:::遍历列表未找到相等的元素，返回特殊值"-1"代表未找到
+        //:::遍历列表未找到相等的元素,返回特殊值"-1"代表未找到
         return -1;
     }
 
     @Override
     public boolean contains(E e) {
-        //:::复用indexOf方法,如果返回-1代表不存在;反之，则代表存在
+        //:::复用indexOf方法,如果返回-1代表不存在;反之,则代表存在
         return (indexOf(e) != -1);
     }
 
@@ -155,7 +155,7 @@ public class LinkedList <E> implements List <E>{
     @Override
     public boolean remove(E e) {
         //:::当前节点 = 列表头部哨兵
-        Node currentNode = this.first;
+        Node<E> currentNode = this.first;
 
         if(e != null){
             //:::如果不是查询空元素
@@ -164,7 +164,7 @@ public class LinkedList <E> implements List <E>{
             for(int i=0; i<this.size; i++){
                 //:::不断切换当前节点 ==> "当前节点 = 当前节点的右节点"
                 currentNode = currentNode.right;
-                //:::如果满足要求（注意: equals顺序不能反，否则可能出现currentNode.data为空,出现空指针异常）
+                //:::如果满足要求（注意: equals顺序不能反,否则可能出现currentNode.data为空,出现空指针异常）
                 if(e.equals(currentNode.data)){
                     //:::匹配成功,将当前节点从链表中删除
                     currentNode.unlinkSelf();
@@ -191,7 +191,7 @@ public class LinkedList <E> implements List <E>{
             }
         }
 
-        //:::遍历列表未找到相等的元素，未进行删除 返回false
+        //:::遍历列表未找到相等的元素,未进行删除 返回false
         return false;
     }
 
@@ -248,43 +248,75 @@ public class LinkedList <E> implements List <E>{
             remove(0);
         }
 
-        //:::执行完毕后,代表链表被初始化，重置size
+        //:::执行完毕后,代表链表被初始化,重置size
         this.size = 0;
     }
 
     @Override
     public Iterator<E> iterator() {
-        return null;
+        return new Itr();
     }
 
+    @Override
+    public String toString() {
+        Iterator<E> iterator = this.iterator();
+
+        //:::空列表
+        if(!iterator.hasNext()){
+            return "[]";
+        }
+
+        //:::列表起始使用"["
+        StringBuilder s = new StringBuilder("[");
+
+        //:::反复迭代
+        while(true){
+            //:::获得迭代的当前元素
+            E data = iterator.next();
+
+            //:::判断当前元素是否是最后一个元素
+            if(!iterator.hasNext()){
+                //:::是最后一个元素，用"]"收尾
+                s.append(data).append("]");
+                //:::返回 拼接完毕的字符串
+                return s.toString();
+            }else{
+                //:::不是最后一个元素
+                //:::使用", "分割，拼接到后面
+                s.append(data).append(", ");
+            }
+        }
+    }
+
+    //===============================================================内部类==========================================================
     /**
      * 链表内部节点
      */
-    private static class Node <E>{
+    private class Node <T>{
         /**
          * 左边关联的节点引用
          * */
-        Node<E> left;
+        Node<T> left;
 
         /**
          * 右边关联的节点引用
          * */
-        Node<E> right;
+        Node<T> right;
 
         /**
          * 节点存储的数据
          * */
-        E data;
+        T data;
 
         //===================================内部节点 构造函数==================================
 
         private Node() {}
 
-        private Node(E data) {
+        private Node(T data) {
             this.data = data;
         }
 
-        private Node(Node<E> left, Node<E> right, E data) {
+        private Node(Node<T> left, Node<T> right, T data) {
             this.left = left;
             this.right = right;
             this.data = data;
@@ -294,7 +326,7 @@ public class LinkedList <E> implements List <E>{
          * 将一个节点作为"当前节点"的"左节点" 插入链表
          * @param node  需要插入的节点
          * */
-        private void linkAsLeft(Node<E> node){
+        private void linkAsLeft(Node<T> node){
             //:::先设置新增节点的 左右节点
             node.left = this.left;
             node.right = this;
@@ -308,7 +340,7 @@ public class LinkedList <E> implements List <E>{
          * 将一个节点作为"当前节点"的"右节点" 插入链表
          * @param node  需要插入的节点
          * */
-        private void linkAsRight(Node<E> node){
+        private void linkAsRight(Node<T> node){
             //:::先设置新增节点的 左右节点
             node.left = this;
             node.right = this.right;
@@ -324,6 +356,44 @@ public class LinkedList <E> implements List <E>{
         private void unlinkSelf(){
             this.left.right = this.right;
             this.right.left = this.left;
+        }
+    }
+
+    /**
+     * 链表迭代器实现
+     * */
+    private class Itr implements Iterator<E>{
+        /**
+         * 当前迭代器光标位置
+         * 初始化指向 头部哨兵节点
+         * */
+        private Node<E> currentNode = LinkedList.this.first;
+
+        @Override
+        public boolean hasNext() {
+            //:::判断当前节点的下一个节点 是否是 尾部哨兵节点
+            return (this.currentNode.right != LinkedList.this.last);
+        }
+
+        @Override
+        public E next() {
+            //:::指向当前节点的下一个节点
+            this.currentNode = this.currentNode.right;
+
+            //:::返回当前节点的data
+            return this.currentNode.data;
+        }
+
+        @Override
+        public void remove() {
+            //:::当前光标指向的节点要被删除,先暂存引用
+            Node<E> nodeWillRemove = this.currentNode;
+
+            //:::由于当前节点需要被删除,因此光标前移,指向当前节点的上一个节点
+            this.currentNode = this.currentNode.left;
+
+            //:::将节点从链表中移除
+            nodeWillRemove.unlinkSelf();
         }
     }
 }
