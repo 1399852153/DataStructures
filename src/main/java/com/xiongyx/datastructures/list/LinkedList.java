@@ -78,12 +78,29 @@ public class LinkedList <E> implements List <E>{
         //:::要求调用该方法前,已经进行了下标越界校验
         //:::出于效率的考虑,不进行重复校验
 
-        Node<E> currentNode = this.first.right;
-        for(int i=0; i<index; i++){
-            currentNode = currentNode.right;
-        }
+        //:::判断下标在当前列表的大概位置（前半段 or 后半段）
+        if(index < this.size/2){
+            //:::下标位于前半段
 
-        return currentNode;
+            //:::从头部结点出发,进行遍历
+            Node<E> currentNode = this.first.right;
+            //:::遍历(index)次
+            for(int i=0; i<index; i++){
+                currentNode = currentNode.right;
+            }
+
+            return currentNode;
+        }else{
+            //:::下标位于后半段
+
+            //:::从尾部结点出发,进行遍历
+            Node<E> currentNode = this.last.left;
+            //:::遍历(size-index)次
+            for(int i=index; i<size; i++){
+                currentNode = currentNode.left;
+            }
+            return currentNode;
+        }
     }
 
     //=================================================外部接口=======================================================
@@ -153,6 +170,9 @@ public class LinkedList <E> implements List <E>{
 
     @Override
     public void add(int index, E e) {
+        //:::插入时,下标越界检查
+        rangeCheckForAdd(index);
+
         //:::查询出下标对应的 目标节点
         Node<E> targetNode = find(index);
 
@@ -301,9 +321,9 @@ public class LinkedList <E> implements List <E>{
 
     //===============================================================内部类==========================================================
     /**
-     * 链表内部节点
+     * 链表内部节点类
      */
-    private class Node <T>{
+    private static class Node <T>{
         /**
          * 左边关联的节点引用
          * */
@@ -324,12 +344,6 @@ public class LinkedList <E> implements List <E>{
         private Node() {}
 
         private Node(T data) {
-            this.data = data;
-        }
-
-        private Node(Node<T> left, Node<T> right, T data) {
-            this.left = left;
-            this.right = right;
             this.data = data;
         }
 
@@ -365,8 +379,12 @@ public class LinkedList <E> implements List <E>{
          * 将"当前节点"移出链表
          * */
         private void unlinkSelf(){
+            //:::令当前链表的 左节点和右节点建立关联
             this.left.right = this.right;
+            //:::令当前链表的 右节点和左节点建立关联
             this.right.left = this.left;
+
+            //:::这样,当前节点就从链表中被移除了(同时,作为私有的内部类,当前节点不会被其它对象引用,很快会被GC回收)
         }
     }
 
