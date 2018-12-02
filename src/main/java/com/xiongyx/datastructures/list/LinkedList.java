@@ -44,7 +44,7 @@ public class LinkedList <E> implements List <E>{
         Node currentNode = this.first;
 
         if(e != null){
-            //:::如果不是查询空元素
+            //:::如果不是查询null元素
 
             //:::遍历列表
             for(int i=0; i<this.size; i++){
@@ -63,7 +63,7 @@ public class LinkedList <E> implements List <E>{
             for(int i=0; i<this.size; i++){
                 //:::不断切换当前节点 ==> 当前节点 = 当前节点的右节点
                 currentNode = currentNode.right;
-                //:::如果满足要求
+                //:::如果满足要求 是null元素
                 if(currentNode.data == null){
                     //:::返回下标
                     return i;
