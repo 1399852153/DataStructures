@@ -59,4 +59,9 @@ public class LinkedListStack<E> implements Stack<E>{
     public void clear() {
         innerLinkedList.clear();
     }
+
+    @Override
+    public String toString() {
+        return innerLinkedList.toString();
+    }
 }

@@ -66,4 +66,9 @@ public class VectorStack <E> implements Stack<E>{
     public void clear() {
         innerArrayList.clear();
     }
+
+    @Override
+    public String toString() {
+        return innerArrayList.toString();
+    }
 }
