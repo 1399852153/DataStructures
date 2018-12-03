@@ -1,5 +1,6 @@
 package com.xiongyx.datastructures.stack;
 
+import com.xiongyx.datastructures.exception.CollectionEmptyException;
 import com.xiongyx.datastructures.list.ArrayList;
 
 /**
@@ -36,6 +37,10 @@ public class VectorStack <E> implements Stack<E>{
 
     @Override
     public E pop() {
+        if(this.isEmpty()){
+            throw new CollectionEmptyException("Stack already empty");
+        }
+
         //:::内部向量末尾下标
         int lastIndex = innerArrayList.size() - 1;
 
@@ -45,6 +50,10 @@ public class VectorStack <E> implements Stack<E>{
 
     @Override
     public E peek() {
+        if(this.isEmpty()){
+            throw new CollectionEmptyException("Stack already empty");
+        }
+
         //:::内部向量末尾下标
         int lastIndex = innerArrayList.size() - 1;
 
