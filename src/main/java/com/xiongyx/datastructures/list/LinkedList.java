@@ -78,11 +78,11 @@ public class LinkedList <E> implements List <E>{
         //:::要求调用该方法前,已经进行了下标越界校验
         //:::出于效率的考虑,不进行重复校验
 
-        //:::判断下标在当前列表的大概位置（前半段 or 后半段）
+        //:::判断下标在当前列表的大概位置（前半段 or 后半段）为了尽量减少遍历查询的次数
         if(index < this.size/2){
             //:::下标位于前半段
 
-            //:::从头部结点出发,进行遍历
+            //:::从头部结点出发,进行遍历(从左到右)
             Node<E> currentNode = this.first.right;
             //:::遍历(index)次
             for(int i=0; i<index; i++){
@@ -93,7 +93,7 @@ public class LinkedList <E> implements List <E>{
         }else{
             //:::下标位于后半段
 
-            //:::从尾部结点出发,进行遍历
+            //:::从尾部结点出发,进行遍历(从右到左)
             Node<E> currentNode = this.last.left;
             //:::遍历(size-index)次
             for(int i=index; i<size; i++){
