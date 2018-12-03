@@ -54,4 +54,9 @@ public class LinkedListStack<E> implements Stack<E>{
     public boolean isEmpty() {
         return innerLinkedList.isEmpty();
     }
+
+    @Override
+    public void clear() {
+        innerLinkedList.clear();
+    }
 }

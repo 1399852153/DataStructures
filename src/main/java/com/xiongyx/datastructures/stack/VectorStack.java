@@ -61,4 +61,9 @@ public class VectorStack <E> implements Stack<E>{
     public boolean isEmpty() {
         return innerArrayList.isEmpty();
     }
+
+    @Override
+    public void clear() {
+        innerArrayList.clear();
+    }
 }

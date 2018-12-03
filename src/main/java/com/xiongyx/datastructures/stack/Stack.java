@@ -31,4 +31,9 @@ public interface Stack<E>{
      * @return 如果当前列表中元素个数为0，返回true；否则，返回false
      */
     boolean isEmpty();
+
+    /**
+     * 清除栈中所有元素
+     * */
+    void clear();
 }
