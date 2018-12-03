@@ -15,6 +15,7 @@ public class ListTest {
 
     private static void testArrayList(){
         LinkedList<Integer> list = new LinkedList<>();
+
         for(int i=0; i<20; i++){
             list.add(i);
         }
