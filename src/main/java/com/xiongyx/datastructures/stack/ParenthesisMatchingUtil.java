@@ -47,7 +47,7 @@ public final class ParenthesisMatchingUtil {
     }
 
     /**
-     * 判断左右字符是否匹配
+     * 判断左右括号是否匹配
      * */
     private static boolean isMatch(char left, char right){
         return (left == PARENTHESES_OPEN && right == PARENTHESES_CLOSE) ||
