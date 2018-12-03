@@ -95,8 +95,8 @@ public class LinkedList <E> implements List <E>{
 
             //:::从尾部结点出发,进行遍历(从右到左)
             Node<E> currentNode = this.last.left;
-            //:::遍历(size-index)次
-            for(int i=index; i<size; i++){
+            //:::遍历(size-index-1)次
+            for(int i=index; i<size-1; i++){
                 currentNode = currentNode.left;
             }
             return currentNode;
