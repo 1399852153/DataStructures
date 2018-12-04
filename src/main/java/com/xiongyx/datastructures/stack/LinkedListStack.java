@@ -1,5 +1,6 @@
 package com.xiongyx.datastructures.stack;
 
+import com.xiongyx.datastructures.exception.CollectionEmptyException;
 import com.xiongyx.datastructures.list.LinkedList;
 
 /**
@@ -29,6 +30,10 @@ public class LinkedListStack<E> implements Stack<E>{
 
     @Override
     public E pop() {
+        if(this.isEmpty()){
+            throw new CollectionEmptyException("Stack already empty");
+        }
+
         //:::内部链表末尾下标
         int lastIndex = innerLinkedList.size() - 1;
 
@@ -38,6 +43,10 @@ public class LinkedListStack<E> implements Stack<E>{
 
     @Override
     public E peek() {
+        if(this.isEmpty()){
+            throw new CollectionEmptyException("Stack already empty");
+        }
+
         //:::内部链表末尾下标
         int lastIndex = innerLinkedList.size() - 1;
 
