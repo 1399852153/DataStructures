@@ -7,17 +7,20 @@ public interface Stack<E>{
 
     /**
      * 将一个元素 加入栈顶
-     * @param
+     * @param  e 需要插入的元素
+     * @return 是否插入成功
      * */
     boolean push(E e);
 
     /**
      * 返回栈顶元素，并且将其从栈中移除(弹出)
+     * @return 当前栈顶元素
      * */
     E pop();
 
     /**
      * 返回栈顶元素，不将其从栈中移除(窥视)
+     * @return 当前栈顶元素
      * */
     E peek();
 
