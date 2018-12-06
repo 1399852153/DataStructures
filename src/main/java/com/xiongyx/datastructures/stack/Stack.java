@@ -1,5 +1,7 @@
 package com.xiongyx.datastructures.stack;
 
+import com.xiongyx.datastructures.iterator.Iterator;
+
 /**
  * 栈ADT 接口定义
  * */
@@ -39,4 +41,9 @@ public interface Stack<E>{
      * 清除栈中所有元素
      * */
     void clear();
+
+    /**
+     * 获得迭代器
+     * */
+    Iterator<E> iterator();
 }

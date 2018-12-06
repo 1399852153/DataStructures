@@ -1,6 +1,7 @@
 package com.xiongyx.datastructures.stack;
 
 import com.xiongyx.datastructures.exception.CollectionEmptyException;
+import com.xiongyx.datastructures.iterator.Iterator;
 import com.xiongyx.datastructures.list.ArrayList;
 
 /**
@@ -74,6 +75,11 @@ public class VectorStack <E> implements Stack<E>{
     @Override
     public void clear() {
         innerArrayList.clear();
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        return innerArrayList.iterator();
     }
 
     @Override

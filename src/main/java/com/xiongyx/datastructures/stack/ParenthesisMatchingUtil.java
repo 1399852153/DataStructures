@@ -60,26 +60,54 @@ public final class ParenthesisMatchingUtil {
      * @param expression 表达式
      * */
     public static boolean bracketsMatch(String expression){
-        Stack<Character> stack = new LinkedListStack<>();
+        Stack<Character> stack = new VectorStack<>();
 
+        //:::将字符串转换为字符数组，进行遍历
         char[] expressionChars = expression.toCharArray();
         for(char targetChar : expressionChars){
+            //:::如果当前字符是 左括号
             if(isParenthesisOpen(targetChar)){
+                //:::左括号 压入栈中
                 stack.push(targetChar);
+
+                //:::如果是右括号
             }else if(isParenthesisClose(targetChar)){
+                //:::如果当前栈为空
                 if(stack.isEmpty()){
+                    //:::左括号少于右括号 (校验失败)
                     return false;
                 }
 
+                //:::查看栈顶左括号
                 char leftParenthesis = stack.peek();
+                //:::"栈顶左括号" 和 "当前右括号" 匹配
                 if(isMatch(leftParenthesis,targetChar)){
+                    //:::栈顶左括号出栈
                     stack.pop();
                 }else{
+                    //:::左右括号类型不匹配 (校验失败)
                     return false;
                 }
+            }else{
+                //:::其它字符不进行处理
             }
         }
 
-        return stack.isEmpty();
+        //:::遍历结束
+        if(stack.isEmpty()){
+            //:::如果栈为空,说明括号完全匹配 (校验成功)
+            return true;
+        }else{
+            //:::如果栈不为空，左括号多于右括号 (校验失败)
+            return false;
+        }
+    }
+
+    public static void main(String[] args){
+        String expression1 = "{3 * [2 + 10 /(1 + 1)]}";
+        bracketsMatch(expression1);
+
+        String expression2 = "(]{})";
+        bracketsMatch(expression2);
     }
 }

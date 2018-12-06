@@ -1,6 +1,7 @@
 package com.xiongyx.datastructures.stack;
 
 import com.xiongyx.datastructures.exception.CollectionEmptyException;
+import com.xiongyx.datastructures.iterator.Iterator;
 import com.xiongyx.datastructures.list.LinkedList;
 
 /**
@@ -67,6 +68,11 @@ public class LinkedListStack<E> implements Stack<E>{
     @Override
     public void clear() {
         innerLinkedList.clear();
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        return innerLinkedList.iterator();
     }
 
     @Override
