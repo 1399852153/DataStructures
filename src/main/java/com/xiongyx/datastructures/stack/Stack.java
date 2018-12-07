@@ -27,13 +27,13 @@ public interface Stack<E>{
     E peek();
 
     /**
-     * @return 返回当前列表中元素的个数
+     * @return 返回当前栈中元素的个数
      */
     int size();
 
     /**
-     * 判断当前列表是否为空
-     * @return 如果当前列表中元素个数为0，返回true；否则，返回false
+     * 判断当前栈是否为空
+     * @return 如果当前栈中元素个数为0，返回true；否则，返回false
      */
     boolean isEmpty();
 
