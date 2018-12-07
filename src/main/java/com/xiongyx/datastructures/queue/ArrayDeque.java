@@ -46,38 +46,94 @@ public class ArrayDeque<E> implements Deque<E>{
         this.tail = 0;
     }
     //===============================================内部辅助方法===================================================
+    /**
+     * 获取逻辑下标===》真实下标的映射
+     * */
+    private int getRealIndex(int logicIndex){
+        int innerArrayLength = this.elements.length;
 
+        //:::获得真实下标
+        return logicIndex & innerArrayLength;
+    }
+
+    /**
+     * 内部数组扩容
+     * */
+    private void expand(){
+        //::: todo
+    }
 
     //=================================================外部接口=======================================================
 
     @Override
     public void addHead(E e) {
+        //:::头部插入元素 head下标前移一位
+        this.head = getRealIndex(this.head - 1);
+        //:::存放新插入的元素
+        this.elements[this.head] = e;
 
+        //:::判断当前队列大小 是否到达临界点
+        if(head == tail){
+            //:::内部数组扩容
+            expand();
+        }
     }
 
     @Override
     public void addTail(E e) {
+        //:::存放新插入的元素
+        this.elements[this.tail] = e;
+        //:::尾部插入元素 tail下标后移一位
+        this.tail = getRealIndex(this.tail + 1);
 
+        //:::判断当前队列大小 是否到达临界点
+        if(head == tail){
+            //:::内部数组扩容
+            expand();
+        }
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public E removeFirst() {
-        return null;
+        //:::暂存需要被删除的数据
+        E dataNeedRemove = (E)this.elements[this.head];
+        //:::将当前头部元素引用释放
+        this.elements[this.head] = null;
+
+        //:::头部下标 后移一位
+        this.head = getRealIndex(this.head + 1);
+
+        return dataNeedRemove;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public E removeTail() {
-        return null;
+        //:::获得尾部元素下标(前移一位)
+        int lastIndex = getRealIndex(this.tail - 1);
+        //:::暂存需要被删除的数据
+        E dataNeedRemove = (E)this.elements[lastIndex];
+
+        //:::设置尾部下标
+        this.tail = lastIndex;
+
+        return dataNeedRemove;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public E peekHead() {
-        return null;
+        return (E)this.elements[this.head];
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public E peekTail() {
-        return null;
+        //:::获得尾部元素下标(前移一位)
+        int lastIndex = getRealIndex(this.tail - 1);
+
+        return (E)this.elements[lastIndex];
     }
 
     @Override
@@ -87,7 +143,8 @@ public class ArrayDeque<E> implements Deque<E>{
 
     @Override
     public boolean isEmpty() {
-        return false;
+        //:::当且仅当 头尾下标相等时 队列为空
+        return (head == tail);
     }
 
     @Override
