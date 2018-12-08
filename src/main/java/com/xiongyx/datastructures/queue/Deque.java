@@ -20,7 +20,7 @@ public interface Deque<E>{
     /**
      * 头部元素删除
      * */
-    E removeFirst();
+    E removeHead();
 
     /**
      * 尾部元素删除

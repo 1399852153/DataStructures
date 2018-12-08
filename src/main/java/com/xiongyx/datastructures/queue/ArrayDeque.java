@@ -71,6 +71,10 @@ public class ArrayDeque<E> implements Deque<E>{
             logicIndex += innerArrayLength;
         }
 
+        while(logicIndex >= innerArrayLength){
+            logicIndex -= innerArrayLength;
+        }
+
         //:::获得真实下标
         return logicIndex;
     }
@@ -83,13 +87,13 @@ public class ArrayDeque<E> implements Deque<E>{
         int elementsLength = this.elements.length;
         Object[] newElements = new Object[elementsLength * EXPAND_BASE];
 
-        //:::将head->数组尾部的元素 复制在新数组的前面
+        //:::将"head -> 数组尾部"的元素 复制在新数组的前面
         for(int i=this.head, j=0; i<elementsLength; i++,j++){
             newElements[j] = this.elements[i];
         }
 
-        //:::将0->head的 复制在新数组的后面
-        for(int i=0, j=this.head; i<this.head; i++,j++){
+        //:::将"0 -> head"的元素 复制在新数组的后面
+        for(int i=0, j=elementsLength-this.head; i<this.head; i++,j++){
             newElements[j] = this.elements[i];
         }
 
@@ -133,7 +137,7 @@ public class ArrayDeque<E> implements Deque<E>{
 
     @Override
     @SuppressWarnings("unchecked")
-    public E removeFirst() {
+    public E removeHead() {
         //:::暂存需要被删除的数据
         E dataNeedRemove = (E)this.elements[this.head];
         //:::将当前头部元素引用释放
@@ -187,7 +191,17 @@ public class ArrayDeque<E> implements Deque<E>{
 
     @Override
     public void clear() {
+        int h = this.head;
+        int t = this.tail;
 
+        while(h != t){
+            int modHead = getMod(h);
+            this.elements[modHead] = null;
+            h = getMod(h + 1);
+        }
+
+        this.head = 0;
+        this.tail = 0;
     }
 
     @Override
