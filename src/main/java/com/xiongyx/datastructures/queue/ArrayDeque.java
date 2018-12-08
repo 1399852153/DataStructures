@@ -21,7 +21,7 @@ public class ArrayDeque<E> implements Deque<E>{
     /**
      * 扩容翻倍的基数
      * */
-    private static final double EXPAND_BASE = 2;
+    private static final int EXPAND_BASE = 2;
 
     /**
      * 队列头部下标
@@ -45,22 +45,60 @@ public class ArrayDeque<E> implements Deque<E>{
         this.head = 0;
         this.tail = 0;
     }
+
+    /**
+     * 默认构造方法
+     * */
+    public ArrayDeque(int initCapacity) {
+        assert initCapacity > 0;
+
+        //:::设置数组大小为默认
+        this.elements = new Object[initCapacity];
+
+        //:::初始化队列 头部,尾部下标
+        this.head = 0;
+        this.tail = 0;
+    }
+
     //===============================================内部辅助方法===================================================
     /**
-     * 获取逻辑下标===》真实下标的映射
+     * 快速取模
      * */
-    private int getRealIndex(int logicIndex){
+    private int getMod(int logicIndex){
         int innerArrayLength = this.elements.length;
 
+        while(logicIndex < 0){
+            logicIndex += innerArrayLength;
+        }
+
         //:::获得真实下标
-        return logicIndex & innerArrayLength;
+        return logicIndex;
     }
 
     /**
      * 内部数组扩容
      * */
     private void expand(){
-        //::: todo
+        //:::内部数组 扩容两倍
+        int elementsLength = this.elements.length;
+        Object[] newElements = new Object[elementsLength * EXPAND_BASE];
+
+        //:::将head->数组尾部的元素 复制在新数组的前面
+        for(int i=this.head, j=0; i<elementsLength; i++,j++){
+            newElements[j] = this.elements[i];
+        }
+
+        //:::将0->head的 复制在新数组的后面
+        for(int i=0, j=this.head; i<this.head; i++,j++){
+            newElements[j] = this.elements[i];
+        }
+
+        //:::初始化head,tail下标
+        this.head = 0;
+        this.tail = this.elements.length;
+
+        //:::内部数组指向 新扩容的数组
+        this.elements = newElements;
     }
 
     //=================================================外部接口=======================================================
@@ -68,7 +106,7 @@ public class ArrayDeque<E> implements Deque<E>{
     @Override
     public void addHead(E e) {
         //:::头部插入元素 head下标前移一位
-        this.head = getRealIndex(this.head - 1);
+        this.head = getMod(this.head - 1);
         //:::存放新插入的元素
         this.elements[this.head] = e;
 
@@ -84,7 +122,7 @@ public class ArrayDeque<E> implements Deque<E>{
         //:::存放新插入的元素
         this.elements[this.tail] = e;
         //:::尾部插入元素 tail下标后移一位
-        this.tail = getRealIndex(this.tail + 1);
+        this.tail = getMod(this.tail + 1);
 
         //:::判断当前队列大小 是否到达临界点
         if(head == tail){
@@ -102,7 +140,7 @@ public class ArrayDeque<E> implements Deque<E>{
         this.elements[this.head] = null;
 
         //:::头部下标 后移一位
-        this.head = getRealIndex(this.head + 1);
+        this.head = getMod(this.head + 1);
 
         return dataNeedRemove;
     }
@@ -111,7 +149,7 @@ public class ArrayDeque<E> implements Deque<E>{
     @SuppressWarnings("unchecked")
     public E removeTail() {
         //:::获得尾部元素下标(前移一位)
-        int lastIndex = getRealIndex(this.tail - 1);
+        int lastIndex = getMod(this.tail - 1);
         //:::暂存需要被删除的数据
         E dataNeedRemove = (E)this.elements[lastIndex];
 
@@ -131,14 +169,14 @@ public class ArrayDeque<E> implements Deque<E>{
     @SuppressWarnings("unchecked")
     public E peekTail() {
         //:::获得尾部元素下标(前移一位)
-        int lastIndex = getRealIndex(this.tail - 1);
+        int lastIndex = getMod(this.tail - 1);
 
         return (E)this.elements[lastIndex];
     }
 
     @Override
     public int size() {
-        return 0;
+        return getMod(tail - head);
     }
 
     @Override
