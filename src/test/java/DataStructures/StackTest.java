@@ -1,7 +1,5 @@
 package DataStructures;
 
-import com.xiongyx.datastructures.queue.ArrayDeque;
-import com.xiongyx.datastructures.queue.Deque;
 import com.xiongyx.datastructures.stack.ParenthesisMatchingUtil;
 import com.xiongyx.datastructures.stack.Stack;
 import com.xiongyx.datastructures.stack.VectorStack;
@@ -9,7 +7,7 @@ import com.xiongyx.datastructures.stack.VectorStack;
 public class StackTest {
 
     public static void main(String[] args){
-//        testParenthesisMatching();
+        testParenthesisMatching();
     }
 
     private static void testStack(){

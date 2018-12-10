@@ -1,5 +1,6 @@
 package com.xiongyx.datastructures.list;
 
+import com.xiongyx.datastructures.exception.IteratorStateErrorException;
 import com.xiongyx.datastructures.iterator.Iterator;
 
 /**
@@ -363,6 +364,10 @@ public class ArrayList <E> implements List <E>{
 
         @Override
         public void remove() {
+            if(this.currentIndex == -1){
+                throw new IteratorStateErrorException("迭代器状态异常: 可能在一次迭代中进行了多次remove操作");
+            }
+
             //:::删除当前元素
             ArrayList.this.remove(this.currentIndex);
             //:::由于删除了当前下标元素，数据段整体向前平移一位，因此nextIndex不用自增
