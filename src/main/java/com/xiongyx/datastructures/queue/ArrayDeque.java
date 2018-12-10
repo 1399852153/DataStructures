@@ -1,5 +1,6 @@
 package com.xiongyx.datastructures.queue;
 
+import com.xiongyx.datastructures.exception.IteratorStateErrorException;
 import com.xiongyx.datastructures.iterator.Iterator;
 
 /**
@@ -67,11 +68,16 @@ public class ArrayDeque<E> implements Deque<E>{
     private int getMod(int logicIndex){
         int innerArrayLength = this.elements.length;
 
+        //:::由于队列下标逻辑上是循环的
+
+        //:::当逻辑下标小于零时
         while(logicIndex < 0){
+            //:::加上当前数组长度
             logicIndex += innerArrayLength;
         }
-
+        //:::当逻辑下标大于数组长度时
         while(logicIndex >= innerArrayLength){
+            //:::减去当前数组长度
             logicIndex -= innerArrayLength;
         }
 
@@ -206,6 +212,57 @@ public class ArrayDeque<E> implements Deque<E>{
 
     @Override
     public Iterator<E> iterator() {
-        return null;
+        return new Itr();
+    }
+
+    /**
+     * 双向队列 迭代器实现
+     * */
+    class Itr implements Iterator<E> {
+        /**
+         * 当前迭代下标 = head
+         * 代表遍历从头部开始
+         * */
+        private int currentIndex = ArrayDeque.this.head;
+
+        /**
+         * 目标终点下标 = tail
+         * 代表遍历至尾部结束
+         * */
+        private int targetIndex = ArrayDeque.this.tail;
+
+        /**
+         * 上一次返回的位置下标
+         * */
+        private int lastReturned;
+
+        @Override
+        public boolean hasNext() {
+            //:::当前迭代下标未到达终点，还存在下一个元素
+            return this.currentIndex != this.targetIndex;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public E next() {
+            //:::先暂存需要返回的元素
+            E value = (E)ArrayDeque.this.elements[this.currentIndex];
+
+            //:::最近一次返回元素下标 = 当前迭代下标
+            this.lastReturned = this.currentIndex;
+            //:::当前迭代下标 向后移动一位(需要取模)
+            this.currentIndex = getMod(this.currentIndex + 1);
+
+            return value;
+        }
+
+        @Override
+        public void remove() {
+            if(this.lastReturned == -1){
+                throw new IteratorStateErrorException("迭代器状态异常: 可能在一次迭代中进行了多次remove操作");
+            }
+
+            //:::todo
+        }
     }
 }
