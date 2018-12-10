@@ -1,5 +1,6 @@
 package com.xiongyx.datastructures.queue;
 
+import com.sun.jmx.remote.internal.ArrayQueue;
 import com.xiongyx.datastructures.exception.IteratorStateErrorException;
 import com.xiongyx.datastructures.iterator.Iterator;
 
@@ -197,13 +198,12 @@ public class ArrayDeque<E> implements Deque<E>{
 
     @Override
     public void clear() {
-        int h = this.head;
-        int t = this.tail;
+        int head = this.head;
+        int tail = this.tail;
 
-        while(h != t){
-            int modHead = getMod(h);
-            this.elements[modHead] = null;
-            h = getMod(h + 1);
+        while(head != tail){
+            this.elements[head] = null;
+            head = getMod(head + 1);
         }
 
         this.head = 0;
@@ -262,7 +262,88 @@ public class ArrayDeque<E> implements Deque<E>{
                 throw new IteratorStateErrorException("迭代器状态异常: 可能在一次迭代中进行了多次remove操作");
             }
 
-            //:::todo
+            //:::删除当前迭代下标的元素
+            boolean deleteFromTail = delete(this.currentIndex);
+            //:::如果从尾部进行收缩
+            if(deleteFromTail){
+                //:::当前迭代下标前移一位
+                this.currentIndex = getMod(this.currentIndex - 1);
+            }
+
+            //:::为了防止用户在一次迭代(next调用)中多次使用remove方法，将lastReturned设置为-1
+            this.lastReturned = -1;
+        }
+
+        /**
+         * 删除队列内部数组特定下标处的元素
+         * @param currentIndex 指定的下标
+         * @return true 被删除的元素靠近尾部
+         *          false 被删除的元素靠近头部
+         * */
+        private boolean delete(int currentIndex){
+            Object[] elements = ArrayDeque.this.elements;
+            int head = ArrayDeque.this.head;
+            int tail = ArrayDeque.this.tail;
+
+            //:::当前下标 之前的元素个数
+            int beforeCount = getMod(currentIndex - head);
+            //:::当前下标 之后的元素个数
+            int afterCount = getMod(tail - currentIndex);
+
+            //:::判断哪一端的元素个数较少
+            if(beforeCount < afterCount){
+                //:::距离头部元素较少，整体移动前半段元素
+
+                //:::判断头部下标 是否小于 当前下标
+                if(head < currentIndex){
+                    //:::小于，正常状态  仅需要复制一批数据
+
+                    //:::将当前数组从"头部下标"开始，整体向右平移一位，移动的元素个数为"当前下标 之前的元素个数"
+                    System.arraycopy(elements,head,elements,head+1,beforeCount);
+                }else{
+                    //:::不小于，说明存在溢出环  需要复制两批数据
+
+                    //:::将数组从"0下标处"的元素整体向右平移一位，移动的元素个数为"从0到当前下标之间的元素个数"
+                    System.arraycopy(elements,0,elements,1,currentIndex);
+                    //:::将数组最尾部的数据设置到头部，防止被覆盖
+                    elements[0] = elements[(elements.length-1)];
+                    //:::将数组尾部的数据整体向右平移一位
+                    System.arraycopy(elements,head,elements,head+1,(elements.length-head-1));
+                }
+
+                //:::释放被删除元素的引用
+                elements[currentIndex] = null;
+                //:::头部下标 向右移动一位
+                ArrayDeque.this.head = getMod(ArrayDeque.this.head + 1);
+
+                //:::没有删除尾部元素 返回false
+                return false;
+            }else{
+                //:::距离尾部元素较少，整体移动后半段元素
+
+                //:::判断尾部下标 是否小于 当前下标
+                if(currentIndex < tail){
+                    //:::小于，正常状态  仅需要复制一批数据
+
+                    //:::将当前数组从"当前"开始，整体向左平移一位，移动的元素个数为"当前下标 之后的元素个数"
+                    System.arraycopy(elements,currentIndex+1,elements,currentIndex,afterCount);
+                }else{
+                    //:::不小于，说明存在溢出环  需要复制两批数据
+
+                    //:::将数组从"当前下标处"的元素整体向左平移一位，移动的元素个数为"从当前下标到数组末尾的元素个数-1 ps：因为要去除掉被删除的元素"
+                    System.arraycopy(elements,currentIndex+1,elements,currentIndex,(elements.length-currentIndex-1));
+                    //:::将数组头部的元素设置到末尾
+                    elements[elements.length-1] = elements[0];
+                    //:::将数组头部的数据整体向左平移一位，移动的元素个数为"从0到尾部下标之间的元素个数"
+                    System.arraycopy(elements,1,elements,0,tail);
+                }
+
+                //:::尾部下标 向左移动一位
+                ArrayDeque.this.tail = getMod(ArrayDeque.this.tail - 1);
+
+                //:::删除了尾部元素 返回true
+                return true;
+            }
         }
     }
 }
