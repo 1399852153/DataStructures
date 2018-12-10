@@ -1,6 +1,5 @@
 package com.xiongyx.datastructures.queue;
 
-import com.sun.jmx.remote.internal.ArrayQueue;
 import com.xiongyx.datastructures.exception.IteratorStateErrorException;
 import com.xiongyx.datastructures.iterator.Iterator;
 
