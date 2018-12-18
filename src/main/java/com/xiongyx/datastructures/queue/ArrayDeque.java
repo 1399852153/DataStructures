@@ -69,14 +69,14 @@ public class ArrayDeque<E> implements Deque<E>{
         int innerArrayLength = this.elements.length;
 
         //:::由于队列下标逻辑上是循环的
+        if(logicIndex < 0){
+            //:::当逻辑下标小于零时
 
-        //:::当逻辑下标小于零时
-        while(logicIndex < 0){
             //:::加上当前数组长度
             logicIndex += innerArrayLength;
-        }
-        //:::当逻辑下标大于数组长度时
-        while(logicIndex >= innerArrayLength){
+        } else if(logicIndex >= innerArrayLength){
+            //:::当逻辑下标大于数组长度时
+
             //:::减去当前数组长度
             logicIndex -= innerArrayLength;
         }
@@ -93,12 +93,12 @@ public class ArrayDeque<E> implements Deque<E>{
         int elementsLength = this.elements.length;
         Object[] newElements = new Object[elementsLength * EXPAND_BASE];
 
-        //:::将"head -> 数组尾部"的元素 复制在新数组的前面
+        //:::将"head -> 数组尾部"的元素 复制在新数组的前面 使用System.arraycopy效率更高
         for(int i=this.head, j=0; i<elementsLength; i++,j++){
             newElements[j] = this.elements[i];
         }
 
-        //:::将"0 -> head"的元素 复制在新数组的后面
+        //:::将"0 -> head"的元素 复制在新数组的后面 使用System.arraycopy效率更高
         for(int i=0, j=elementsLength-this.head; i<this.head; i++,j++){
             newElements[j] = this.elements[i];
         }
