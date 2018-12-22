@@ -214,10 +214,41 @@ public class ArrayDeque<E> implements Deque<E>{
         return new Itr();
     }
 
+    @Override
+    public String toString() {
+        Iterator<E> iterator = this.iterator();
+
+        //:::空列表
+        if(!iterator.hasNext()){
+            return "[]";
+        }
+
+        //:::列表起始使用"["
+        StringBuilder s = new StringBuilder("[");
+
+        //:::反复迭代
+        while(true){
+            //:::获得迭代的当前元素
+            E data = iterator.next();
+
+            //:::判断当前元素是否是最后一个元素
+            if(!iterator.hasNext()){
+                //:::是最后一个元素，用"]"收尾
+                s.append(data).append("]");
+                //:::返回 拼接完毕的字符串
+                return s.toString();
+            }else{
+                //:::不是最后一个元素
+                //:::使用", "分割，拼接到后面
+                s.append(data).append(", ");
+            }
+        }
+    }
+
     /**
      * 双向队列 迭代器实现
      * */
-    class Itr implements Iterator<E> {
+    private class Itr implements Iterator<E> {
         /**
          * 当前迭代下标 = head
          * 代表遍历从头部开始

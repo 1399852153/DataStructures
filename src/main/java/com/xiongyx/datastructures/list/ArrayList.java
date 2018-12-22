@@ -53,6 +53,9 @@ public class ArrayList <E> implements List <E>{
      * @param capacity 内部数组初始大小
      * */
     public ArrayList(int capacity) {
+        if(capacity <= DEFAULT_CAPACITY){
+            capacity = DEFAULT_CAPACITY;
+        }
         this.capacity = capacity;
         size = 0;
         //:::设置数组大小
