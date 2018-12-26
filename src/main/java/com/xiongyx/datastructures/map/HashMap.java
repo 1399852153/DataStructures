@@ -82,7 +82,7 @@ public class HashMap<K,V> implements Map<K,V>{
             //::: null 默认存储在第0个桶内
             return 0;
         }else{
-            return key.hashCode() % (this.elements.length);
+            return key.hashCode() % (this.elements.length-1);
         }
     }
 
