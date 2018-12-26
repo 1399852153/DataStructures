@@ -112,6 +112,13 @@ public class HashMap<K,V> implements Map<K,V>{
         return currentNode;
     }
 
+    /**
+     * 内部数组扩容
+     * */
+    private void expand(){
+        //::: todo 内部数组扩容
+    }
+
     //============================================外部接口================================================
 
     @Override
@@ -201,7 +208,32 @@ public class HashMap<K,V> implements Map<K,V>{
 
     @Override
     public V get(K key) {
-        return null;
+        //:::获得对应的内部数组下标
+        int index = getIndex(key);
+        //:::获得对应桶内的第一个节点
+        EntryNode<K,V> firstEntryNode = this.elements[index];
+
+        //:::如果当前桶内不存在任何节点
+        if(firstEntryNode == null){
+            return null;
+        }
+
+        if(firstEntryNode.keyIsEquals(key)){
+            //:::当前第一个节点的key与之匹配
+            return firstEntryNode.value;
+        }else{
+            //:::获得匹配的目标节点的前一个节点
+            EntryNode<K,V> targetPreviousNode = getTargetPreviousEntryNode(firstEntryNode,key);
+            //:::获得匹配的目标节点
+            EntryNode<K,V> targetNode = targetPreviousNode.next;
+
+            if(targetNode != null){
+                return targetNode.value;
+            }else{
+                //:::如果目标节点为空，说明key并不存在于哈希表中
+                return null;
+            }
+        }
     }
 
     @Override
@@ -226,7 +258,13 @@ public class HashMap<K,V> implements Map<K,V>{
 
     @Override
     public void clear() {
+        //:::遍历内部数组，将所有桶链表全部清空
+        for(int i=0; i<this.elements.length; i++){
+            this.elements[i] = null;
+        }
 
+        //:::size设置为0
+        this.size = 0;
     }
 
     @Override
