@@ -244,6 +244,25 @@ public class HashMap<K,V> implements Map<K,V>{
 
     @Override
     public boolean containsValue(V value) {
+        //:::遍历全部桶链表
+        for(int i=0; i<this.elements.length; i++){
+            //:::获得当前桶链表第一个节点
+            EntryNode<K,V> entryNode = this.elements[i];
+
+            //:::遍历当前桶链表
+            while(entryNode != null){
+                //:::如果value匹配
+                if(entryNode.value.equals(value)){
+                    //:::返回true
+                    return true;
+                }else{
+                    //:::不匹配，指向下一个节点
+                    entryNode = entryNode.next;
+                }
+            }
+        }
+
+        //:::所有的节点都遍历了，没有匹配的value
         return false;
     }
 

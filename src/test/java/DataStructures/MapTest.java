@@ -12,6 +12,10 @@ public class MapTest {
         System.out.println(map1.put(2,"bbb"));
         System.out.println(map1.put(3,"ccc"));
         System.out.println(map1.put(1,"111"));
+        System.out.println(map1.containsKey(1));
+        System.out.println(map1.containsKey(11));
+        System.out.println(map1.containsValue("bbb"));
+        System.out.println(map1.containsValue("aaa"));
         System.out.println(map1.size());
         System.out.println(map1.get(1));
         System.out.println(map1.get(2));
@@ -28,6 +32,10 @@ public class MapTest {
         System.out.println(map2.put(2,"bbb"));
         System.out.println(map2.put(3,"ccc"));
         System.out.println(map2.put(1,"111"));
+        System.out.println(map2.containsKey(1));
+        System.out.println(map2.containsKey(11));
+        System.out.println(map2.containsValue("bbb"));
+        System.out.println(map2.containsValue("aaa"));
         System.out.println(map2.size());
         System.out.println(map2.get(1));
         System.out.println(map2.get(2));
