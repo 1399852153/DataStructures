@@ -8,33 +8,6 @@ import com.xiongyx.datastructures.iterator.Iterator;
  */
 public class HashMap<K,V> implements Map<K,V>{
 
-    /**
-     * 键值对节点 内部类
-     * */
-    public static class EntryNode<K,V>{
-        final K key;
-        V value;
-        EntryNode<K,V> next;
-
-        EntryNode(K key, V value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        boolean keyIsEquals(K key){
-            if(this.key == key){
-                return true;
-            }
-
-            if(key == null){
-                //:::如果走到这步，说明 this.key不等于null
-                return false;
-            }else{
-                return key.equals(this.key);
-            }
-        }
-    }
-
     //===========================================成员属性================================================
     /**
      * 内部数组
@@ -388,7 +361,12 @@ public class HashMap<K,V> implements Map<K,V>{
         return new Itr();
     }
 
+    /**
+     * 哈希表 迭代器实现
+     */
     private class Itr implements Iterator<EntryNode<K,V>> {
+
+
 
         @Override
         public boolean hasNext() {
