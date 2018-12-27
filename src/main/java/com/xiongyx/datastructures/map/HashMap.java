@@ -11,7 +11,7 @@ public class HashMap<K,V> implements Map<K,V>{
     /**
      * 键值对节点 内部类
      * */
-    private static class EntryNode<K,V>{
+    public static class EntryNode<K,V>{
         final K key;
         V value;
         EntryNode<K,V> next;
@@ -47,9 +47,24 @@ public class HashMap<K,V> implements Map<K,V>{
     private int size;
 
     /**
+     * 负载因子
+     * */
+    private float loadFactor;
+
+    /**
      * 默认的哈希表容量
      * */
     private final static int DEFAULT_CAPACITY = 16;
+
+    /**
+     * 扩容翻倍的基数
+     * */
+    private final static int REHASH_BASE = 2;
+
+    /**
+     * 默认的负载因子
+     * */
+    private final static float DEFAULT_LOAD_FACTOR = 0.75f;
 
     //========================================构造方法===================================================
     /**
@@ -58,6 +73,7 @@ public class HashMap<K,V> implements Map<K,V>{
     @SuppressWarnings("unchecked")
     public HashMap() {
         this.size = 0;
+        this.loadFactor = DEFAULT_LOAD_FACTOR;
         elements = new EntryNode[DEFAULT_CAPACITY];
     }
 
@@ -68,6 +84,19 @@ public class HashMap<K,V> implements Map<K,V>{
     @SuppressWarnings("unchecked")
     public HashMap(int capacity) {
         this.size = 0;
+        this.loadFactor = DEFAULT_LOAD_FACTOR;
+        elements = new EntryNode[capacity];
+    }
+
+    /**
+     * 指定初始容量和负载因子的构造方法
+     * @param capacity 指定的初始容量
+     * @param loadFactor 指定的负载因子
+     * */
+    @SuppressWarnings("unchecked")
+    public HashMap(int capacity,int loadFactor) {
+        this.size = 0;
+        this.loadFactor = loadFactor;
         elements = new EntryNode[capacity];
     }
 
@@ -83,6 +112,21 @@ public class HashMap<K,V> implements Map<K,V>{
             return 0;
         }else{
             return key.hashCode() % (this.elements.length-1);
+        }
+    }
+
+    /**
+     * 通过key的hashCode获得对应的内部数组下标
+     * @param key 传入的键值key
+     * @param elements 内部数组
+     * @return 对应的内部数组下标
+     * */
+    private int getIndex(K key,EntryNode<K,V>[] elements){
+        if(key == null){
+            //::: null 默认存储在第0个桶内
+            return 0;
+        }else{
+            return key.hashCode() % (elements.length-1);
         }
     }
 
@@ -113,16 +157,68 @@ public class HashMap<K,V> implements Map<K,V>{
     }
 
     /**
-     * 内部数组扩容
+     * 哈希表扩容
      * */
-    private void expand(){
-        //::: todo 内部数组扩容
+    @SuppressWarnings("unchecked")
+    private void reHash(){
+        EntryNode<K,V>[] newElements = new EntryNode[this.elements.length * REHASH_BASE];
+
+        //:::遍历全部桶链表
+        for (EntryNode<K, V> element : this.elements) {
+            //:::获得当前桶链表第一个节点
+            EntryNode<K, V> currentEntryNode = element;
+
+            //:::遍历当前桶链表
+            while (currentEntryNode != null) {
+                //:::重新安排当前节点
+                reHashEntry(currentEntryNode, newElements);
+                //:::不匹配，指向下一个节点
+                currentEntryNode = currentEntryNode.next;
+            }
+        }
+
+        //:::内部数组 ---> 扩容之后的新数组
+        this.elements = newElements;
+    }
+
+    /**
+     * 重新安排当前节点
+     * @param currentEntryNode 当前节点
+     * @param newElements 扩容后的内部数组
+     * */
+    private void reHashEntry(EntryNode<K,V> currentEntryNode,EntryNode<K,V>[] newElements){
+        //:::获得当前节点在扩容后的数组中对应的下标
+        int index = getIndex(currentEntryNode.key,newElements);
+
+        //:::获得对应桶链表的头部节点
+        EntryNode<K,V> firstEntryNode = newElements[index];
+
+        if(firstEntryNode == null){
+            //:::桶链表头部节点为空，当前节点设置为桶链表头部节点
+            newElements[index] = currentEntryNode;
+        }else{
+            //:::之前的桶链表头部节点设置为当前节点的next
+            currentEntryNode.next = newElements[index];
+            //:::将桶链表头部节点设置为当前节点
+            newElements[index] = currentEntryNode;
+        }
+    }
+
+    /**
+     * 判断是否需要 扩容
+     * */
+    private boolean needReHash(){
+        return ((this.size / this.elements.length) > this.loadFactor);
     }
 
     //============================================外部接口================================================
 
     @Override
     public V put(K key, V value) {
+        if(needReHash()){
+            reHash();
+        }
+
         //:::获得对应的内部数组下标
         int index = getIndex(key);
         //:::获得对应桶内的第一个节点
@@ -245,17 +341,17 @@ public class HashMap<K,V> implements Map<K,V>{
     @Override
     public boolean containsValue(V value) {
         //:::遍历全部桶链表
-        for(int i=0; i<this.elements.length; i++){
+        for (EntryNode<K, V> element : this.elements) {
             //:::获得当前桶链表第一个节点
-            EntryNode<K,V> entryNode = this.elements[i];
+            EntryNode<K, V> entryNode = element;
 
             //:::遍历当前桶链表
-            while(entryNode != null){
+            while (entryNode != null) {
                 //:::如果value匹配
-                if(entryNode.value.equals(value)){
+                if (entryNode.value.equals(value)) {
                     //:::返回true
                     return true;
-                }else{
+                } else {
                     //:::不匹配，指向下一个节点
                     entryNode = entryNode.next;
                 }
@@ -288,7 +384,25 @@ public class HashMap<K,V> implements Map<K,V>{
     }
 
     @Override
-    public Iterator iterator() {
-        return null;
+    public Iterator<EntryNode<K,V>> iterator() {
+        return new Itr();
+    }
+
+    private class Itr implements Iterator<EntryNode<K,V>> {
+
+        @Override
+        public boolean hasNext() {
+            return false;
+        }
+
+        @Override
+        public EntryNode<K,V> next() {
+            return null;
+        }
+
+        @Override
+        public void remove() {
+
+        }
     }
 }
