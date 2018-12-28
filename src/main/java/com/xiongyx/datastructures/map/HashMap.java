@@ -365,12 +365,12 @@ public class HashMap<K,V> implements Map<K,V>{
     public String toString() {
         Iterator<EntryNode<K,V>> iterator = this.iterator();
 
-        //:::空列表
+        //:::空容器
         if(!iterator.hasNext()){
             return "[]";
         }
 
-        //:::列表起始使用"["
+        //:::容器起始使用"["
         StringBuilder s = new StringBuilder("[");
 
         //:::反复迭代
