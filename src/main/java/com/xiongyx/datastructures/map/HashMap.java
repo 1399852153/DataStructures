@@ -1,5 +1,6 @@
 package com.xiongyx.datastructures.map;
 
+import com.xiongyx.datastructures.exception.IteratorStateErrorException;
 import com.xiongyx.datastructures.iterator.Iterator;
 
 /**
@@ -84,12 +85,16 @@ public class HashMap<K,V> implements Map<K,V>{
             //::: null 默认存储在第0个桶内
             return 0;
         }else{
-            return key.hashCode() % (this.elements.length-1);
+            int hashCode = key.hashCode();
+
+            //:::通过 高位和低位的异或运算，获得最终的hash映射，减少碰撞的几率
+            int finalHashCode = hashCode ^ (hashCode >>> 16);
+            return (this.elements.length-1) & finalHashCode;
         }
     }
 
     /**
-     * 通过key的hashCode获得对应的内部数组下标
+     * 通过key的hashCode获得对应的内部数组插槽slot下标
      * @param key 传入的键值key
      * @param elements 内部数组
      * @return 对应的内部数组下标
@@ -361,26 +366,131 @@ public class HashMap<K,V> implements Map<K,V>{
         return new Itr();
     }
 
+    @Override
+    public String toString() {
+        Iterator<EntryNode<K,V>> iterator = this.iterator();
+
+        //:::空列表
+        if(!iterator.hasNext()){
+            return "[]";
+        }
+
+        //:::列表起始使用"["
+        StringBuilder s = new StringBuilder("[");
+
+        //:::反复迭代
+        while(true){
+            //:::获得迭代的当前元素
+            EntryNode<K,V> data = iterator.next();
+
+            //:::判断当前元素是否是最后一个元素
+            if(!iterator.hasNext()){
+                //:::是最后一个元素，用"]"收尾
+                s.append(data).append("]");
+                //:::返回 拼接完毕的字符串
+                return s.toString();
+            }else{
+                //:::不是最后一个元素
+                //:::使用", "分割，拼接到后面
+                s.append(data).append(", ");
+            }
+        }
+    }
+
     /**
      * 哈希表 迭代器实现
      */
     private class Itr implements Iterator<EntryNode<K,V>> {
+        /**
+         * 迭代器下标 当前节点
+         * */
+        private EntryNode<K,V> currentNode;
 
+        /**
+         * 迭代器下标 下一个节点
+         * */
+        private EntryNode<K,V> nextNode;
 
+        /**
+         * 迭代器下标 当前内部数组的下标
+         * */
+        private int currentIndex;
+
+        /**
+         * 默认构造方法
+         * */
+        private Itr(){
+            //:::如果当前哈希表为空，直接返回
+            if(HashMap.this.isEmpty()){
+                return;
+            }
+            //:::在构造方法中，将迭代器下标移动到第一个有效的节点上
+
+            //:::遍历内部数组，找到第一个不为空的数组插槽slot
+            for(int i=0; i<HashMap.this.elements.length; i++){
+                //:::设置当前index
+                this.currentIndex = i;
+
+                EntryNode<K,V> firstEntryNode = HashMap.this.elements[i];
+                //:::找到了第一个不为空的插槽slot
+                if(firstEntryNode != null){
+                    //:::nextNode = 当前插槽第一个节点
+                    this.nextNode = firstEntryNode;
+
+                    //:::构造方法立即结束
+                    return;
+                }
+            }
+        }
 
         @Override
         public boolean hasNext() {
-            return false;
+            return (this.nextNode != null);
         }
 
         @Override
         public EntryNode<K,V> next() {
-            return null;
+            this.currentNode = this.nextNode;
+            //:::暂存需要返回的节点
+            EntryNode<K,V> needReturn = this.nextNode;
+
+            //:::nextNode指向自己的next
+            this.nextNode = this.nextNode.next;
+            //:::判断当前nextNode是否为null
+            if(this.nextNode == null){
+                //:::说明当前所在的桶链表已经遍历完毕
+
+                //:::寻找下一个非空的插槽
+                for(int i=this.currentIndex+1; i<HashMap.this.elements.length; i++){
+                    //:::设置当前index
+                    this.currentIndex = i;
+
+                    EntryNode<K,V> firstEntryNode = HashMap.this.elements[i];
+                    //:::找到了后续不为空的插槽slot
+                    if(firstEntryNode != null){
+                        //:::nextNode = 当前插槽第一个节点
+                        this.nextNode = firstEntryNode;
+                        //:::跳出循环
+                        break;
+                    }
+                }
+            }
+            return needReturn;
         }
 
         @Override
         public void remove() {
+            if(this.currentNode == null){
+                throw new IteratorStateErrorException("迭代器状态异常: 可能在一次迭代中进行了多次remove操作");
+            }
 
+            //:::获得需要被移除的节点的key
+            K currentKey = this.currentNode.key;
+            //:::将其从哈希表中移除
+            HashMap.this.remove(currentKey);
+
+            //:::currentNode设置为null，防止反复调用remove方法
+            this.currentNode = null;
         }
     }
 }
