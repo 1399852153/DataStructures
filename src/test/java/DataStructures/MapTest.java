@@ -7,15 +7,11 @@ package DataStructures;
  */
 public class MapTest {
     public static void main(String[] args){
-//        testJDKHashMap();
+        testJDKHashMap();
 //
-//        System.out.println("=================================================");
-//
-//        testMyHashMap();
+        System.out.println("=================================================");
 
-        String s = new String("111");
-        System.out.println(s.hashCode());
-        System.out.println(s.hashCode());
+        testMyHashMap();
     }
 
     private static void testJDKHashMap(){
@@ -52,6 +48,9 @@ public class MapTest {
 
     private static void testMyHashMap(){
         com.xiongyx.datastructures.map.Map<Integer,String> map2 = new com.xiongyx.datastructures.map.HashMap<>();
+        System.out.println(map2.put(1,"aaa"));
+        System.out.println(map2.put(2,"bbb"));
+        System.out.println(map2.put(3,"ccc"));
         System.out.println(map2.put(1,"aaa"));
         System.out.println(map2.put(2,"bbb"));
         System.out.println(map2.put(3,"ccc"));
