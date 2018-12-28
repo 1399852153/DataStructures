@@ -31,6 +31,7 @@ public class MapTest {
         System.out.println(map1.put(111,"bbb"));
         System.out.println(map1.put(222,"ccc"));
         System.out.println(map1.put(1321,"111"));
+
         System.out.println(map1.toString());
         System.out.println(map1.containsKey(1));
         System.out.println(map1.containsKey(11));
@@ -63,6 +64,7 @@ public class MapTest {
         System.out.println(map2.put(111,"bbb"));
         System.out.println(map2.put(222,"ccc"));
         System.out.println(map2.put(1321,"111"));
+
         System.out.println(map2.toString());
         System.out.println(map2.containsKey(1));
         System.out.println(map2.containsKey(11));

@@ -81,16 +81,7 @@ public class HashMap<K,V> implements Map<K,V>{
      * @return 对应的内部数组下标
      * */
     private int getIndex(K key){
-        if(key == null){
-            //::: null 默认存储在第0个桶内
-            return 0;
-        }else{
-            int hashCode = key.hashCode();
-
-            //:::通过 高位和低位的异或运算，获得最终的hash映射，减少碰撞的几率
-            int finalHashCode = hashCode ^ (hashCode >>> 16);
-            return (this.elements.length-1) & finalHashCode;
-        }
+        return getIndex(key,this.elements);
     }
 
     /**
@@ -104,7 +95,11 @@ public class HashMap<K,V> implements Map<K,V>{
             //::: null 默认存储在第0个桶内
             return 0;
         }else{
-            return key.hashCode() % (elements.length-1);
+            int hashCode = key.hashCode();
+
+            //:::通过 高位和低位的异或运算，获得最终的hash映射，减少碰撞的几率
+            int finalHashCode = hashCode ^ (hashCode >>> 16);
+            return (elements.length-1) & finalHashCode;
         }
     }
 
