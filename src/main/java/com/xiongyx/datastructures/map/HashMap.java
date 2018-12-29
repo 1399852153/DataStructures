@@ -397,17 +397,17 @@ public class HashMap<K,V> implements Map<K,V>{
      */
     private class Itr implements Iterator<EntryNode<K,V>> {
         /**
-         * 迭代器下标 当前节点
+         * 迭代器 当前节点
          * */
         private EntryNode<K,V> currentNode;
 
         /**
-         * 迭代器下标 下一个节点
+         * 迭代器 下一个节点
          * */
         private EntryNode<K,V> nextNode;
 
         /**
-         * 迭代器下标 当前内部数组的下标
+         * 迭代器 当前内部数组的下标
          * */
         private int currentIndex;
 
