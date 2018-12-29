@@ -145,7 +145,7 @@ public class HashMap<K,V> implements Map<K,V>{
             while (currentEntryNode != null) {
                 //:::重新安排当前节点
                 reHashEntry(currentEntryNode, newElements);
-                //:::不匹配，指向下一个节点
+                //:::遍历，指向下一个节点
                 currentEntryNode = currentEntryNode.next;
             }
         }
