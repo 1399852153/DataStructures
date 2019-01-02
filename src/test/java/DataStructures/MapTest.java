@@ -8,14 +8,14 @@ package DataStructures;
 public class MapTest {
     public static void main(String[] args){
         testJDKHashMap();
-//
+
         System.out.println("=================================================");
 
         testMyHashMap();
     }
 
     private static void testJDKHashMap(){
-        java.util.Map<Integer,String> map1 = new java.util.HashMap<>();
+        java.util.Map<Integer,String> map1 = new java.util.HashMap<>(1,2);
         System.out.println(map1.put(1,"aaa"));
         System.out.println(map1.put(2,"bbb"));
         System.out.println(map1.put(3,"ccc"));
@@ -24,10 +24,10 @@ public class MapTest {
         System.out.println(map1.put(3,"ccc"));
         System.out.println(map1.put(1,"111"));
         System.out.println(map1.put(3,"aaa"));
-        System.out.println(map1.put(4,"bbb"));
-        System.out.println(map1.put(5,"ccc"));
-        System.out.println(map1.put(6,"111"));
-        System.out.println(map1.put(8,"aaa"));
+        System.out.println(map1.put(4,"ddd"));
+        System.out.println(map1.put(5,"eee"));
+        System.out.println(map1.put(6,"fff"));
+        System.out.println(map1.put(8,"ggg"));
         System.out.println(map1.put(111,"bbb"));
         System.out.println(map1.put(222,"ccc"));
         System.out.println(map1.put(1321,"111"));
@@ -48,7 +48,7 @@ public class MapTest {
     }
 
     private static void testMyHashMap(){
-        com.xiongyx.datastructures.map.Map<Integer,String> map2 = new com.xiongyx.datastructures.map.HashMap<>();
+        com.xiongyx.datastructures.map.Map<Integer,String> map2 = new com.xiongyx.datastructures.map.HashMap<>(1,2);
         System.out.println(map2.put(1,"aaa"));
         System.out.println(map2.put(2,"bbb"));
         System.out.println(map2.put(3,"ccc"));
@@ -57,10 +57,10 @@ public class MapTest {
         System.out.println(map2.put(3,"ccc"));
         System.out.println(map2.put(1,"111"));
         System.out.println(map2.put(3,"aaa"));
-        System.out.println(map2.put(4,"bbb"));
-        System.out.println(map2.put(5,"ccc"));
-        System.out.println(map2.put(6,"111"));
-        System.out.println(map2.put(8,"aaa"));
+        System.out.println(map2.put(4,"ddd"));
+        System.out.println(map2.put(5,"eee"));
+        System.out.println(map2.put(6,"fff"));
+        System.out.println(map2.put(8,"ggg"));
         System.out.println(map2.put(111,"bbb"));
         System.out.println(map2.put(222,"ccc"));
         System.out.println(map2.put(1321,"111"));

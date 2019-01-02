@@ -2,6 +2,7 @@ package com.xiongyx.datastructures.map;
 
 import com.xiongyx.datastructures.exception.IteratorStateErrorException;
 import com.xiongyx.datastructures.iterator.Iterator;
+import java.util.Arrays;
 
 /**
  * @Author xiongyx
@@ -31,7 +32,7 @@ public class HashMap<K,V> implements Map<K,V>{
     private final static int DEFAULT_CAPACITY = 16;
 
     /**
-     * 扩容翻倍的基数
+     * 扩容翻倍的基数 两倍
      * */
     private final static int REHASH_BASE = 2;
 
@@ -134,20 +135,13 @@ public class HashMap<K,V> implements Map<K,V>{
      * */
     @SuppressWarnings("unchecked")
     private void reHash(){
+        //:::扩容两倍
         EntryNode<K,V>[] newElements = new EntryNode[this.elements.length * REHASH_BASE];
 
-        //:::遍历全部桶链表
-        for (EntryNode<K, V> element : this.elements) {
-            //:::获得当前桶链表第一个节点
-            EntryNode<K, V> currentEntryNode = element;
-
-            //:::遍历当前桶链表
-            while (currentEntryNode != null) {
-                //:::重新安排当前节点
-                reHashEntry(currentEntryNode, newElements);
-                //:::遍历，指向下一个节点
-                currentEntryNode = currentEntryNode.next;
-            }
+        //:::遍历所有的插槽
+        for (int i=0; i<this.elements.length; i++) {
+            //:::为单个插槽内的元素 rehash
+            reHashSlot(i,newElements);
         }
 
         //:::内部数组 ---> 扩容之后的新数组
@@ -155,25 +149,66 @@ public class HashMap<K,V> implements Map<K,V>{
     }
 
     /**
-     * 重新安排当前节点
-     * @param currentEntryNode 当前节点
-     * @param newElements 扩容后的内部数组
+     * 单个插槽内的数据进行rehash
      * */
-    private void reHashEntry(EntryNode<K,V> currentEntryNode,EntryNode<K,V>[] newElements){
-        //:::获得当前节点在扩容后的数组中对应的下标
-        int index = getIndex(currentEntryNode.key,newElements);
+    private void reHashSlot(int index,EntryNode<K, V>[] newElements){
+        //:::获得当前插槽第一个元素
+        EntryNode<K, V> currentEntryNode = this.elements[index];
+        if(currentEntryNode == null){
+            //:::当前插槽为空，直接返回
+            return;
+        }
 
-        //:::获得对应桶链表的头部节点
-        EntryNode<K,V> firstEntryNode = newElements[index];
+        //:::低位桶链表 头部节点、尾部节点
+        EntryNode<K, V> lowListHead = null;
+        EntryNode<K, V> lowListTail = null;
+        //:::高位桶链表 头部节点、尾部节点
+        EntryNode<K, V> highListHead = null;
+        EntryNode<K, V> highListTail = null;
 
-        if(firstEntryNode == null){
-            //:::桶链表头部节点为空，当前节点设置为桶链表头部节点
-            newElements[index] = currentEntryNode;
-        }else{
-            //:::之前的桶链表头部节点设置为当前节点的next
-            currentEntryNode.next = newElements[index];
-            //:::将桶链表头部节点设置为当前节点
-            newElements[index] = currentEntryNode;
+        while(currentEntryNode != null){
+            //:::获得当前节点 在新数组中映射的插槽下标
+            int entryNodeIndex = getIndex(currentEntryNode.key,newElements);
+            //:::是否和当前插槽下标相等
+            if(entryNodeIndex == index){
+                //:::相等
+                if(lowListHead == null){
+                    //:::初始化低位链表
+                    lowListHead = currentEntryNode;
+                    lowListTail = currentEntryNode;
+                }else{
+                    //:::在低位链表尾部拓展新的节点
+                    lowListTail.next = currentEntryNode;
+                    lowListTail = lowListTail.next;
+                }
+            }else{
+                //:::不相等
+                if(highListHead == null){
+                    //:::初始化高位链表
+                    highListHead = currentEntryNode;
+                    highListTail = currentEntryNode;
+                }else{
+                    //:::在高位链表尾部拓展新的节点
+                    highListTail.next = currentEntryNode;
+                    highListTail = highListTail.next;
+                }
+            }
+            //:::指向当前插槽的下一个节点
+            currentEntryNode = currentEntryNode.next;
+        }
+
+        //:::新elements (index)插槽 存放lowList
+        newElements[index] = lowListHead;
+        //:::lowList末尾截断
+        if(lowListTail != null){
+            lowListTail.next = null;
+        }
+
+        //:::新elements (index+this.elements.length)插槽 存放highList
+        newElements[index + this.elements.length] = highListHead;
+        //:::highList末尾截断
+        if(highListTail != null){
+            highListTail.next = null;
         }
     }
 
