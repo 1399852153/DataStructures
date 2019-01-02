@@ -171,7 +171,7 @@ public class HashMap<K,V> implements Map<K,V>{
             int entryNodeIndex = getIndex(currentEntryNode.key,newElements);
             //:::是否和当前插槽下标相等
             if(entryNodeIndex == index){
-                //:::相等
+                //:::和当前插槽下标相等
                 if(lowListHead == null){
                     //:::初始化低位链表
                     lowListHead = currentEntryNode;
@@ -182,7 +182,7 @@ public class HashMap<K,V> implements Map<K,V>{
                     lowListTail = lowListTail.next;
                 }
             }else{
-                //:::不相等
+                //:::和当前插槽下标不相等
                 if(highListHead == null){
                     //:::初始化高位链表
                     highListHead = currentEntryNode;
@@ -197,14 +197,14 @@ public class HashMap<K,V> implements Map<K,V>{
             currentEntryNode = currentEntryNode.next;
         }
 
-        //:::新elements (index)插槽 存放lowList
+        //:::新扩容elements(index)插槽 存放lowList
         newElements[index] = lowListHead;
         //:::lowList末尾截断
         if(lowListTail != null){
             lowListTail.next = null;
         }
 
-        //:::新elements (index+this.elements.length)插槽 存放highList
+        //:::新扩容elements(index + this.elements.length)插槽 存放highList
         newElements[index + this.elements.length] = highListHead;
         //:::highList末尾截断
         if(highListTail != null){

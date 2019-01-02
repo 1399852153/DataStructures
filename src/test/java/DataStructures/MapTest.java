@@ -28,9 +28,14 @@ public class MapTest {
         System.out.println(map1.put(5,"eee"));
         System.out.println(map1.put(6,"fff"));
         System.out.println(map1.put(8,"ggg"));
-        System.out.println(map1.put(111,"bbb"));
-        System.out.println(map1.put(222,"ccc"));
-        System.out.println(map1.put(1321,"111"));
+        System.out.println(map1.put(11,"bbb"));
+        System.out.println(map1.put(22,"ccc"));
+        System.out.println(map1.put(33,"111"));
+        System.out.println(map1.put(9,"111"));
+        System.out.println(map1.put(10,"111"));
+        System.out.println(map1.put(12,"111"));
+        System.out.println(map1.put(13,"111"));
+        System.out.println(map1.put(14,"111"));
 
         System.out.println(map1.toString());
         System.out.println(map1.containsKey(1));
@@ -61,9 +66,14 @@ public class MapTest {
         System.out.println(map2.put(5,"eee"));
         System.out.println(map2.put(6,"fff"));
         System.out.println(map2.put(8,"ggg"));
-        System.out.println(map2.put(111,"bbb"));
-        System.out.println(map2.put(222,"ccc"));
-        System.out.println(map2.put(1321,"111"));
+        System.out.println(map2.put(11,"bbb"));
+        System.out.println(map2.put(22,"ccc"));
+        System.out.println(map2.put(33,"111"));
+        System.out.println(map2.put(9,"111"));
+        System.out.println(map2.put(10,"111"));
+        System.out.println(map2.put(12,"111"));
+        System.out.println(map2.put(13,"111"));
+        System.out.println(map2.put(14,"111"));
 
         System.out.println(map2.toString());
         System.out.println(map2.containsKey(1));
