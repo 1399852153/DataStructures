@@ -9,6 +9,17 @@ import com.xiongyx.datastructures.iterator.Iterator;
  * 二叉搜索树实现
  */
 public class TreeMap<K,V> implements Map<K,V>{
+
+    /**
+     * 根节点
+     * */
+    private Entry<K,V> root;
+
+    /**
+     * 当前二叉树的大小
+     * */
+    private int size;
+
     /**
      * 二叉搜索树 内部节点
      * */
@@ -16,8 +27,19 @@ public class TreeMap<K,V> implements Map<K,V>{
         K key;
         V value;
 
+        /**
+         * 左孩子节点
+         * */
         Entry<K,V> left;
+
+        /**
+         * 右孩子节点
+         * */
         Entry<K,V> right;
+
+        /**
+         * 双亲节点
+         * */
         Entry<K,V> parent;
 
         @Override
