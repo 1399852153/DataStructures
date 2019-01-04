@@ -69,54 +69,22 @@ public interface Map <K,V>{
     Iterator<EntryNode<K,V>> iterator();
 
     /**
-     * 键值对节点 内部类
+     * entry 键值对节点接口
      * */
-    class EntryNode<K,V>{
-        final K key;
-        V value;
-        EntryNode<K,V> next;
+    interface EntryNode<K,V>{
+        /**
+         * 获得key值
+         * */
+        K getKey();
 
-        EntryNode(K key, V value) {
-            this.key = key;
-            this.value = value;
-        }
+        /**
+         * 获得value值
+         * */
+        V getValue();
 
-        boolean keyIsEquals(K key){
-            if(this.key == key){
-                return true;
-            }
-
-            if(key == null){
-                //:::如果走到这步，this.key不等于null，不匹配
-                return false;
-            }else{
-                return key.equals(this.key);
-            }
-        }
-
-        EntryNode<K, V> getNext() {
-            return next;
-        }
-
-        void setNext(EntryNode<K, V> next) {
-            this.next = next;
-        }
-
-        public K getKey() {
-            return key;
-        }
-
-        public V getValue() {
-            return value;
-        }
-
-        public void setValue(V value) {
-            this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return key + "=" + value;
-        }
+        /**
+         * 设置value值
+         * */
+        void setValue(V value);
     }
 }

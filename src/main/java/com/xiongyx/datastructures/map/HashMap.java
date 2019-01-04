@@ -2,10 +2,13 @@ package com.xiongyx.datastructures.map;
 
 import com.xiongyx.datastructures.exception.IteratorStateErrorException;
 import com.xiongyx.datastructures.iterator.Iterator;
+import com.xiongyx.datastructures.map.Map.EntryNode;
 
 /**
  * @Author xiongyx
  * @Date 2018/12/26
+ *
+ * 哈希表实现
  */
 public class HashMap<K,V> implements Map<K,V>{
 
@@ -391,13 +394,13 @@ public class HashMap<K,V> implements Map<K,V>{
     }
 
     @Override
-    public Iterator<EntryNode<K,V>> iterator() {
+    public Iterator<Map.EntryNode<K,V>> iterator() {
         return new Itr();
     }
 
     @Override
     public String toString() {
-        Iterator<EntryNode<K,V>> iterator = this.iterator();
+        Iterator<Map.EntryNode<K,V>> iterator = this.iterator();
 
         //:::空容器
         if(!iterator.hasNext()){
@@ -410,7 +413,7 @@ public class HashMap<K,V> implements Map<K,V>{
         //:::反复迭代
         while(true){
             //:::获得迭代的当前元素
-            EntryNode<K,V> data = iterator.next();
+            Map.EntryNode<K,V> data = iterator.next();
 
             //:::判断当前元素是否是最后一个元素
             if(!iterator.hasNext()){
@@ -426,19 +429,71 @@ public class HashMap<K,V> implements Map<K,V>{
         }
     }
 
+    private static class EntryNode<K,V> implements Map.EntryNode<K,V>{
+        final K key;
+        V value;
+        EntryNode<K,V> next;
+
+        EntryNode(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        boolean keyIsEquals(K key){
+            if(this.key == key){
+                return true;
+            }
+
+            if(key == null){
+                //:::如果走到这步，this.key不等于null，不匹配
+                return false;
+            }else{
+                return key.equals(this.key);
+            }
+        }
+
+        Map.EntryNode<K, V> getNext() {
+            return next;
+        }
+
+        void setNext(HashMap.EntryNode<K, V> next) {
+            this.next = next;
+        }
+
+        @Override
+        public K getKey() {
+            return key;
+        }
+
+        @Override
+        public V getValue() {
+            return value;
+        }
+
+        @Override
+        public void setValue(V value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return key + "=" + value;
+        }
+    }
+
     /**
      * 哈希表 迭代器实现
      */
-    private class Itr implements Iterator<EntryNode<K,V>> {
+    private class Itr implements Iterator<Map.EntryNode<K,V>> {
         /**
          * 迭代器 当前节点
          * */
-        private EntryNode<K,V> currentNode;
+        private HashMap.EntryNode<K,V> currentNode;
 
         /**
          * 迭代器 下一个节点
          * */
-        private EntryNode<K,V> nextNode;
+        private HashMap.EntryNode<K,V> nextNode;
 
         /**
          * 迭代器 当前内部数组的下标
@@ -460,7 +515,7 @@ public class HashMap<K,V> implements Map<K,V>{
                 //:::设置当前index
                 this.currentIndex = i;
 
-                EntryNode<K,V> firstEntryNode = HashMap.this.elements[i];
+                HashMap.EntryNode<K,V> firstEntryNode = HashMap.this.elements[i];
                 //:::找到了第一个不为空的插槽slot
                 if(firstEntryNode != null){
                     //:::nextNode = 当前插槽第一个节点
@@ -478,10 +533,10 @@ public class HashMap<K,V> implements Map<K,V>{
         }
 
         @Override
-        public EntryNode<K,V> next() {
+        public Map.EntryNode<K,V> next() {
             this.currentNode = this.nextNode;
             //:::暂存需要返回的节点
-            EntryNode<K,V> needReturn = this.nextNode;
+            HashMap.EntryNode<K,V> needReturn = this.nextNode;
 
             //:::nextNode指向自己的next
             this.nextNode = this.nextNode.next;
@@ -494,7 +549,7 @@ public class HashMap<K,V> implements Map<K,V>{
                     //:::设置当前index
                     this.currentIndex = i;
 
-                    EntryNode<K,V> firstEntryNode = HashMap.this.elements[i];
+                    HashMap.EntryNode<K,V> firstEntryNode = HashMap.this.elements[i];
                     //:::找到了后续不为空的插槽slot
                     if(firstEntryNode != null){
                         //:::nextNode = 当前插槽第一个节点
