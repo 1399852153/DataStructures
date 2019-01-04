@@ -9,6 +9,32 @@ import com.xiongyx.datastructures.iterator.Iterator;
  * 二叉搜索树实现
  */
 public class TreeMap<K,V> implements Map<K,V>{
+    /**
+     * 二叉搜索树 内部节点
+     * */
+    static class Entry<K,V> implements Map.EntryNode<K,V>{
+        K key;
+        V value;
+
+        Entry<K,V> left;
+        Entry<K,V> right;
+        Entry<K,V> parent;
+
+        @Override
+        public K getKey() {
+            return key;
+        }
+
+        @Override
+        public V getValue() {
+            return value;
+        }
+
+        @Override
+        public void setValue(V value) {
+            this.value = value;
+        }
+    }
 
     @Override
     public V put(K key, V value) {

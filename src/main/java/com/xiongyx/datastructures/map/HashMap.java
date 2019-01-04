@@ -455,7 +455,7 @@ public class HashMap<K,V> implements Map<K,V>{
             return next;
         }
 
-        void setNext(HashMap.EntryNode<K, V> next) {
+        void setNext(EntryNode<K, V> next) {
             this.next = next;
         }
 
@@ -487,12 +487,12 @@ public class HashMap<K,V> implements Map<K,V>{
         /**
          * 迭代器 当前节点
          * */
-        private HashMap.EntryNode<K,V> currentNode;
+        private EntryNode<K,V> currentNode;
 
         /**
          * 迭代器 下一个节点
          * */
-        private HashMap.EntryNode<K,V> nextNode;
+        private EntryNode<K,V> nextNode;
 
         /**
          * 迭代器 当前内部数组的下标
@@ -514,7 +514,7 @@ public class HashMap<K,V> implements Map<K,V>{
                 //:::设置当前index
                 this.currentIndex = i;
 
-                HashMap.EntryNode<K,V> firstEntryNode = HashMap.this.elements[i];
+                EntryNode<K,V> firstEntryNode = HashMap.this.elements[i];
                 //:::找到了第一个不为空的插槽slot
                 if(firstEntryNode != null){
                     //:::nextNode = 当前插槽第一个节点
@@ -535,7 +535,7 @@ public class HashMap<K,V> implements Map<K,V>{
         public Map.EntryNode<K,V> next() {
             this.currentNode = this.nextNode;
             //:::暂存需要返回的节点
-            HashMap.EntryNode<K,V> needReturn = this.nextNode;
+            EntryNode<K,V> needReturn = this.nextNode;
 
             //:::nextNode指向自己的next
             this.nextNode = this.nextNode.next;
@@ -548,7 +548,7 @@ public class HashMap<K,V> implements Map<K,V>{
                     //:::设置当前index
                     this.currentIndex = i;
 
-                    HashMap.EntryNode<K,V> firstEntryNode = HashMap.this.elements[i];
+                    EntryNode<K,V> firstEntryNode = HashMap.this.elements[i];
                     //:::找到了后续不为空的插槽slot
                     if(firstEntryNode != null){
                         //:::nextNode = 当前插槽第一个节点
