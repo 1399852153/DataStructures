@@ -13,7 +13,7 @@ public class TreeMap<K,V> implements Map<K,V>{
     /**
      * 根节点
      * */
-    private Entry<K,V> root;
+    private EntryNode<K,V> root;
 
     /**
      * 当前二叉树的大小
@@ -30,11 +30,11 @@ public class TreeMap<K,V> implements Map<K,V>{
     /**
      * 二叉搜索树 内部节点
      * */
-    static class Entry<K,V> implements Map.EntryNode<K,V>{
+    static class EntryNode<K,V> implements Map.EntryNode<K,V>{
         K key;
         V value;
 
-        public Entry(K key, V value) {
+        EntryNode(K key, V value) {
             this.key = key;
             this.value = value;
         }
@@ -42,17 +42,17 @@ public class TreeMap<K,V> implements Map<K,V>{
         /**
          * 左孩子节点
          * */
-        Entry<K,V> left;
+        EntryNode<K,V> left;
 
         /**
          * 右孩子节点
          * */
-        Entry<K,V> right;
+        EntryNode<K,V> right;
 
         /**
          * 双亲节点
          * */
-        Entry<K,V> parent;
+        EntryNode<K,V> parent;
 
         @Override
         public K getKey() {
@@ -70,13 +70,29 @@ public class TreeMap<K,V> implements Map<K,V>{
         }
     }
 
-    @Override
-    public V put(K key, V value) {
+    /**
+     * 获得key对应的目标节点
+     * @param key   对应的key
+     * @return      对应的目标节点
+     *
+     * */
+    private EntryNode<K, V> getTargetEntryNode(K key){
+        //:::如果根节点为空
         if(this.root == null){
-            root = new TreeMap.Entry<>(key,value);
+            //:::返回根节点
+            return this.root;
         }
 
         return null;
+    }
+
+    @Override
+    public V put(K key, V value) {
+        EntryNode<K,V> targetEntryNode = getTargetEntryNode(key);
+
+        V oldValue = targetEntryNode.value;
+        targetEntryNode.setValue(value);
+        return oldValue;
     }
 
     @Override
@@ -116,7 +132,7 @@ public class TreeMap<K,V> implements Map<K,V>{
     }
 
     @Override
-    public Iterator<EntryNode<K, V>> iterator() {
+    public Iterator<Map.EntryNode<K, V>> iterator() {
         return null;
     }
 }
