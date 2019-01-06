@@ -21,11 +21,23 @@ public class TreeMap<K,V> implements Map<K,V>{
     private int size;
 
     /**
+     * 默认构造函数
+     * */
+    public TreeMap() {
+        this.size = 0;
+    }
+
+    /**
      * 二叉搜索树 内部节点
      * */
     static class Entry<K,V> implements Map.EntryNode<K,V>{
         K key;
         V value;
+
+        public Entry(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
 
         /**
          * 左孩子节点
@@ -60,6 +72,10 @@ public class TreeMap<K,V> implements Map<K,V>{
 
     @Override
     public V put(K key, V value) {
+        if(this.root == null){
+            root = new TreeMap.Entry<>(key,value);
+        }
+
         return null;
     }
 
@@ -85,17 +101,18 @@ public class TreeMap<K,V> implements Map<K,V>{
 
     @Override
     public int size() {
-        return 0;
+        return this.size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return (this.size == 0);
     }
 
     @Override
     public void clear() {
-
+        this.size = 0;
+        this.root = null;
     }
 
     @Override
