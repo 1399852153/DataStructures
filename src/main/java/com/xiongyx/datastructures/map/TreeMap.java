@@ -1,7 +1,6 @@
 package com.xiongyx.datastructures.map;
 
 import com.xiongyx.datastructures.iterator.Iterator;
-import java.util.Comparator;
 
 /**
  * @Author xiongyx
@@ -78,19 +77,76 @@ public class TreeMap<K,V> implements Map<K,V>{
     }
 
     /**
+     * nearestEntryNode 和目标节点的相对位置
+     * */
+     private enum RelativePosition {
+        /**
+         * 左节点
+         * */
+        LEFT,
+
+        /**
+         * 右节点
+         * */
+        RIGHT,
+
+        /**
+         * 当前节点
+         * */
+        CURRENT;
+    }
+    /**
+     * 查找目标节点 返回值
+     * */
+    private static class TargetEntryNode<K,V>{
+        /**
+         * 距离目标节点最近的节点
+         * */
+        private EntryNode<K,V> nearestEntryNode;
+
+        /**
+         * 相对位置
+         * */
+        private RelativePosition relativePosition;
+
+        TargetEntryNode(EntryNode<K,V> nearestEntryNode, RelativePosition relativePosition) {
+            this.nearestEntryNode = nearestEntryNode;
+            this.relativePosition = relativePosition;
+        }
+    }
+
+    /**
      * 获得key对应的目标节点
      * @param key   对应的key
      * @return      对应的目标节点
-     *
+     *               返回null代表 目标节点不存在
      * */
-    private EntryNode<K, V> getTargetEntryNode(K key){
-        //:::如果根节点为空
-        if(this.root == null){
-            //:::返回根节点
-            return this.root;
+    private TargetEntryNode<K,V> getTargetEntryNode(K key){
+        int compareResult = 0;
+        EntryNode<K,V> parent = null;
+        EntryNode<K,V> currentNode = this.root;
+        while(currentNode != null){
+            parent = currentNode;
+            //:::当前key 和 currentNode.key进行比较
+            compareResult = compare(key,currentNode.key);
+            if(compareResult > 0){
+                //:::当前key 大于currentNode 指向右边节点
+                currentNode = currentNode.right;
+            }else if(compareResult < 0){
+                //:::当前key 小于currentNode 指向右边节点
+                currentNode = currentNode.left;
+            }else{
+                return new TargetEntryNode<>(currentNode, RelativePosition.CURRENT);
+            }
         }
 
-        return null;
+        if(compareResult > 0){
+            return new TargetEntryNode<>(parent, RelativePosition.RIGHT);
+        }else if(compareResult < 0){
+            return new TargetEntryNode<>(parent, RelativePosition.LEFT);
+        }else{
+            throw new RuntimeException("状态异常");
+        }
     }
 
     /**
@@ -110,45 +166,65 @@ public class TreeMap<K,V> implements Map<K,V>{
             return null;
         }
 
-        int compareResult = 0;
-        EntryNode<K,V> parent = null;
-        EntryNode<K,V> currentNode = this.root;
-        while(currentNode != null){
-            parent = currentNode;
-            compareResult = compare(key,currentNode.key);
-            if(compareResult == 0){
-                //:::当前key 恰好等于 currentNode
-                V oldValue = currentNode.value;
-                currentNode.setValue(value);
-                return oldValue;
-            }else if(compareResult == 1){
-                //:::当前key 大于currentNode 指向右边节点
-                currentNode = currentNode.right;
-            }else{
-                //:::当前key 小于currentNode 指向右边节点
-                currentNode = currentNode.left;
-            }
-        }
+        //:::获得目标节点
+        TargetEntryNode<K,V> targetEntryNode = getTargetEntryNode(key);
+        if(targetEntryNode.relativePosition == RelativePosition.CURRENT){
+            //:::目标节点存在于当前容器
 
-        currentNode = new EntryNode<>(key,value,parent);
-        if(compareResult > 0){
-            parent.right = currentNode;
+            //:::暂存之前的value
+            V oldValue = targetEntryNode.nearestEntryNode.value;
+            //:::替换为新的value
+            targetEntryNode.nearestEntryNode.value = value;
+            //:::返回之前的value
+            return oldValue;
         }else{
-            parent.left = currentNode;
-        }
+            //:::目标节点不存在于当前容器
+            EntryNode<K,V> nearestEntryNode = targetEntryNode.nearestEntryNode;
+            if(targetEntryNode.relativePosition == RelativePosition.LEFT){
+                //:::目标节点位于左边
+                nearestEntryNode.left = new EntryNode<>(key,value,nearestEntryNode);
+            }else{
+                //:::目标节点位于右边
+                nearestEntryNode.right = new EntryNode<>(key,value,nearestEntryNode);
+            }
 
-        this.size++;
-        return null;
+            this.size++;
+            return null;
+        }
     }
 
     @Override
     public V remove(K key) {
-        return null;
+        if(this.root == null){
+            return null;
+        }
+
+        //:::查询目标节点
+        TargetEntryNode<K,V> targetEntryNode = getTargetEntryNode(key);
+        if(targetEntryNode.relativePosition != RelativePosition.CURRENT){
+            //:::没有找到目标节点
+            return null;
+        }else{
+            //:::todo 删除目标节点
+
+            return targetEntryNode.nearestEntryNode.value;
+        }
     }
 
     @Override
     public V get(K key) {
-        return null;
+        if(this.root == null){
+            return null;
+        }
+
+        //:::查询目标节点
+        TargetEntryNode<K,V> targetEntryNode = getTargetEntryNode(key);
+        if(targetEntryNode.relativePosition != RelativePosition.CURRENT){
+            //:::没有找到目标节点
+            return null;
+        }else{
+            return targetEntryNode.nearestEntryNode.value;
+        }
     }
 
     @Override
