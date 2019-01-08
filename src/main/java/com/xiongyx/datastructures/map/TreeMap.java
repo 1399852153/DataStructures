@@ -1,6 +1,7 @@
 package com.xiongyx.datastructures.map;
 
 import com.xiongyx.datastructures.iterator.Iterator;
+import java.util.Comparator;
 
 /**
  * @Author xiongyx
@@ -37,6 +38,12 @@ public class TreeMap<K,V> implements Map<K,V>{
         EntryNode(K key, V value) {
             this.key = key;
             this.value = value;
+        }
+
+        EntryNode(K key, V value,EntryNode<K,V> parent) {
+            this.key = key;
+            this.value = value;
+            this.parent = parent;
         }
 
         /**
@@ -86,13 +93,52 @@ public class TreeMap<K,V> implements Map<K,V>{
         return null;
     }
 
+    /**
+     * key值进行比较
+     * */
+    @SuppressWarnings("unchecked")
+    private int compare(K k1,K k2){
+        return ((Comparable) k1).compareTo(k2);
+    }
+
     @Override
     public V put(K key, V value) {
-        EntryNode<K,V> targetEntryNode = getTargetEntryNode(key);
+        if(this.root == null){
+            compare(key,key);
+            this.root = new EntryNode<>(key,value);
+            this.size++;
+            return null;
+        }
 
-        V oldValue = targetEntryNode.value;
-        targetEntryNode.setValue(value);
-        return oldValue;
+        int compareResult = 0;
+        EntryNode<K,V> parent = null;
+        EntryNode<K,V> currentNode = this.root;
+        while(currentNode != null){
+            parent = currentNode;
+            compareResult = compare(key,currentNode.key);
+            if(compareResult == 0){
+                //:::当前key 恰好等于 currentNode
+                V oldValue = currentNode.value;
+                currentNode.setValue(value);
+                return oldValue;
+            }else if(compareResult == 1){
+                //:::当前key 大于currentNode 指向右边节点
+                currentNode = currentNode.right;
+            }else{
+                //:::当前key 小于currentNode 指向右边节点
+                currentNode = currentNode.left;
+            }
+        }
+
+        currentNode = new EntryNode<>(key,value,parent);
+        if(compareResult > 0){
+            parent.right = currentNode;
+        }else{
+            parent.left = currentNode;
+        }
+
+        this.size++;
+        return null;
     }
 
     @Override
