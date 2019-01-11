@@ -74,6 +74,11 @@ public class TreeMap<K,V> implements Map<K,V>{
         public void setValue(V value) {
             this.value = value;
         }
+
+        @Override
+        public String toString() {
+            return key + "=" + value;
+        }
     }
 
     /**
@@ -207,6 +212,7 @@ public class TreeMap<K,V> implements Map<K,V>{
         }else{
             //:::todo 删除目标节点
 
+            this.size--;
             return targetEntryNode.nearestEntryNode.value;
         }
     }
@@ -229,7 +235,7 @@ public class TreeMap<K,V> implements Map<K,V>{
 
     @Override
     public boolean containsKey(K key) {
-        return false;
+        return (get(key) != null);
     }
 
     @Override
@@ -256,5 +262,16 @@ public class TreeMap<K,V> implements Map<K,V>{
     @Override
     public Iterator<Map.EntryNode<K, V>> iterator() {
         return null;
+    }
+
+    @Override
+    public String toString(){
+
+
+        return "";
+    }
+
+    private String show(EntryNode<K,V> entryNode){
+        return entryNode.toString();
     }
 }
