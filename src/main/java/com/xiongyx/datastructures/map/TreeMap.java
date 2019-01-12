@@ -82,7 +82,7 @@ public class TreeMap<K,V> implements Map<K,V>{
     }
 
     /**
-     * nearestEntryNode 和目标节点的相对位置
+     * target 和目标节点的相对位置
      * */
      private enum RelativePosition {
         /**
@@ -105,61 +105,25 @@ public class TreeMap<K,V> implements Map<K,V>{
      * */
     private static class TargetEntryNode<K,V>{
         /**
-         * 距离目标节点最近的节点
+         * 目标节点
          * */
-        private EntryNode<K,V> nearestEntryNode;
+        private EntryNode<K,V> target;
+
+        /**
+         * 目标节点的双亲节点
+         * */
+        private EntryNode<K,V> parent;
 
         /**
          * 相对位置
          * */
         private RelativePosition relativePosition;
 
-        TargetEntryNode(EntryNode<K,V> nearestEntryNode, RelativePosition relativePosition) {
-            this.nearestEntryNode = nearestEntryNode;
+        TargetEntryNode(EntryNode<K, V> target, EntryNode<K, V> parent, RelativePosition relativePosition) {
+            this.target = target;
+            this.parent = parent;
             this.relativePosition = relativePosition;
         }
-    }
-
-    /**
-     * 获得key对应的目标节点
-     * @param key   对应的key
-     * @return      对应的目标节点
-     *               返回null代表 目标节点不存在
-     * */
-    private TargetEntryNode<K,V> getTargetEntryNode(K key){
-        int compareResult = 0;
-        EntryNode<K,V> parent = null;
-        EntryNode<K,V> currentNode = this.root;
-        while(currentNode != null){
-            parent = currentNode;
-            //:::当前key 和 currentNode.key进行比较
-            compareResult = compare(key,currentNode.key);
-            if(compareResult > 0){
-                //:::当前key 大于currentNode 指向右边节点
-                currentNode = currentNode.right;
-            }else if(compareResult < 0){
-                //:::当前key 小于currentNode 指向右边节点
-                currentNode = currentNode.left;
-            }else{
-                return new TargetEntryNode<>(currentNode, RelativePosition.CURRENT);
-            }
-        }
-
-        if(compareResult > 0){
-            return new TargetEntryNode<>(parent, RelativePosition.RIGHT);
-        }else if(compareResult < 0){
-            return new TargetEntryNode<>(parent, RelativePosition.LEFT);
-        }else{
-            throw new RuntimeException("状态异常");
-        }
-    }
-
-    /**
-     * key值进行比较
-     * */
-    @SuppressWarnings("unchecked")
-    private int compare(K k1,K k2){
-        return ((Comparable) k1).compareTo(k2);
     }
 
     @Override
@@ -177,20 +141,20 @@ public class TreeMap<K,V> implements Map<K,V>{
             //:::目标节点存在于当前容器
 
             //:::暂存之前的value
-            V oldValue = targetEntryNode.nearestEntryNode.value;
+            V oldValue = targetEntryNode.target.value;
             //:::替换为新的value
-            targetEntryNode.nearestEntryNode.value = value;
+            targetEntryNode.target.value = value;
             //:::返回之前的value
             return oldValue;
         }else{
             //:::目标节点不存在于当前容器
-            EntryNode<K,V> nearestEntryNode = targetEntryNode.nearestEntryNode;
+            EntryNode<K,V> parent = targetEntryNode.parent;
             if(targetEntryNode.relativePosition == RelativePosition.LEFT){
                 //:::目标节点位于左边
-                nearestEntryNode.left = new EntryNode<>(key,value,nearestEntryNode);
+                parent.left = new EntryNode<>(key,value,parent);
             }else{
                 //:::目标节点位于右边
-                nearestEntryNode.right = new EntryNode<>(key,value,nearestEntryNode);
+                parent.right = new EntryNode<>(key,value,parent);
             }
 
             this.size++;
@@ -210,10 +174,13 @@ public class TreeMap<K,V> implements Map<K,V>{
             //:::没有找到目标节点
             return null;
         }else{
-            //:::todo 删除目标节点
+            //:::找到了目标节点
+
+            //:::从二叉树中删除目标节点
+            deleteEntryNode(targetEntryNode.target);
 
             this.size--;
-            return targetEntryNode.nearestEntryNode.value;
+            return targetEntryNode.target.value;
         }
     }
 
@@ -229,7 +196,7 @@ public class TreeMap<K,V> implements Map<K,V>{
             //:::没有找到目标节点
             return null;
         }else{
-            return targetEntryNode.nearestEntryNode.value;
+            return targetEntryNode.target.value;
         }
     }
 
@@ -270,6 +237,48 @@ public class TreeMap<K,V> implements Map<K,V>{
     }
 
     /**
+     * 获得key对应的目标节点
+     * @param key   对应的key
+     * @return      对应的目标节点
+     *               返回null代表 目标节点不存在
+     * */
+    private TargetEntryNode<K,V> getTargetEntryNode(K key){
+        int compareResult = 0;
+        EntryNode<K,V> parent = null;
+        EntryNode<K,V> currentNode = this.root;
+        while(currentNode != null){
+            parent = currentNode;
+            //:::当前key 和 currentNode.key进行比较
+            compareResult = compare(key,currentNode.key);
+            if(compareResult > 0){
+                //:::当前key 大于currentNode 指向右边节点
+                currentNode = currentNode.right;
+            }else if(compareResult < 0){
+                //:::当前key 小于currentNode 指向右边节点
+                currentNode = currentNode.left;
+            }else{
+                return new TargetEntryNode<>(currentNode, parent, RelativePosition.CURRENT);
+            }
+        }
+
+        if(compareResult > 0){
+            return new TargetEntryNode<>(null, parent, RelativePosition.RIGHT);
+        }else if(compareResult < 0){
+            return new TargetEntryNode<>(null, parent, RelativePosition.LEFT);
+        }else{
+            throw new RuntimeException("状态异常");
+        }
+    }
+
+    /**
+     * key值进行比较
+     * */
+    @SuppressWarnings("unchecked")
+    private int compare(K k1,K k2){
+        return ((Comparable) k1).compareTo(k2);
+    }
+
+    /**
      * 中序遍历 递归简单实现
      * */
     private String midTraverse(EntryNode<K,V> entryNode){
@@ -281,5 +290,22 @@ public class TreeMap<K,V> implements Map<K,V>{
         String successStr = midTraverse(entryNode.right);
 
         return preStr + entryNode + successStr;
+    }
+
+    /**
+     * 将目标节点从二叉搜索树中删除
+     * @param entryNode 需要被删除的节点
+     * */
+    private void deleteEntryNode(EntryNode<K,V> entryNode){
+        /*
+         * 删除二叉搜索树节点
+         * 	1.无左右孩子
+         * 		直接删除
+         * 	2.只有左孩子或者右孩子
+         * 		将唯一的孩子和parent节点直接相连
+         * 	3.既有左孩子，又有右孩子
+         * 		找到距离自己的直接后继（左侧的最右节点/右侧的最左节点）
+         * 		将自己和直接后继进行交换，转换为第1或第2种情况，并将自己删除
+         * */
     }
 }
