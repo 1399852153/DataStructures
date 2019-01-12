@@ -266,12 +266,20 @@ public class TreeMap<K,V> implements Map<K,V>{
 
     @Override
     public String toString(){
-
-
-        return "";
+        return midTraverse(this.root);
     }
 
-    private String show(EntryNode<K,V> entryNode){
-        return entryNode.toString();
+    /**
+     * 中序遍历 递归简单实现
+     * */
+    private String midTraverse(EntryNode<K,V> entryNode){
+        if(entryNode == null){
+            return "";
+        }
+
+        String preStr = midTraverse(entryNode.left);
+        String successStr = midTraverse(entryNode.right);
+
+        return preStr + entryNode + successStr;
     }
 }

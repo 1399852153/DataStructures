@@ -16,6 +16,6 @@ public class TreeMapTest {
         treeMap.put(4,"1");
         treeMap.put(6,"1");
 
-
+        CommonUtil.show(treeMap);
     }
 }

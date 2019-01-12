@@ -5,7 +5,7 @@ package DataStructures;
  * @Author xiongyx
  * @Date 2018/12/26
  */
-public class MapTest {
+public class HashMapTest {
     public static void main(String[] args){
         testJDKHashMap();
 
