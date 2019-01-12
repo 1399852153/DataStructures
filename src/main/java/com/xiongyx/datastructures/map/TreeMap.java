@@ -177,7 +177,7 @@ public class TreeMap<K,V> implements Map<K,V>{
             //:::找到了目标节点
 
             //:::从二叉树中删除目标节点
-            deleteEntryNode(targetEntryNode.target);
+            deleteEntryNode(targetEntryNode);
 
             this.size--;
             return targetEntryNode.target.value;
@@ -294,9 +294,9 @@ public class TreeMap<K,V> implements Map<K,V>{
 
     /**
      * 将目标节点从二叉搜索树中删除
-     * @param entryNode 需要被删除的节点
+     * @param targetEntryNode 需要被删除的节点
      * */
-    private void deleteEntryNode(EntryNode<K,V> entryNode){
+    private void deleteEntryNode(TargetEntryNode<K,V> targetEntryNode){
         /*
          * 删除二叉搜索树节点
          * 	1.无左右孩子
@@ -307,5 +307,35 @@ public class TreeMap<K,V> implements Map<K,V>{
          * 		找到距离自己的直接后继（左侧的最右节点/右侧的最左节点）
          * 		将自己和直接后继进行交换，转换为第1或第2种情况，并将自己删除
          * */
+
+        EntryNode<K,V> parent = targetEntryNode.parent;
+        EntryNode<K,V> target = targetEntryNode.target;
+
+        //:::无左右孩子
+        if(target.left == null && target.right == null){
+            RelativePosition relativePosition = getRelativeByParent(parent,target);
+            //:::直接删除,断开和双亲节点的联系
+            if(relativePosition == RelativePosition.LEFT){
+                parent.left = null;
+            }else{
+                parent.right = null;
+            }
+
+            target.parent = null;
+            return;
+        }
+
+        //:::只有左孩子或者右孩子
+
+    }
+
+    private RelativePosition getRelativeByParent(EntryNode<K,V> parent,EntryNode<K,V> target){
+        if(parent.left == target){
+            return RelativePosition.LEFT;
+        }else if(parent.right == target){
+            return RelativePosition.RIGHT;
+        }else{
+            throw new RuntimeException("状态异常");
+        }
     }
 }
