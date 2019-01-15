@@ -304,16 +304,34 @@ public class TreeMap<K,V> implements Map<K,V>{
          * 	2.只有左孩子或者右孩子
          * 		将唯一的孩子和parent节点直接相连
          * 	3.既有左孩子，又有右孩子
-         * 		找到距离自己的直接后继（左侧的最右节点/右侧的最左节点）
+         * 		找到自己的直接后继（左侧的最右节点/右侧的最左节点）
          * 		将自己和直接后继进行交换，转换为第1或第2种情况，并将自己删除
          * */
 
-        EntryNode<K,V> parent = targetEntryNode.parent;
         EntryNode<K,V> target = targetEntryNode.target;
 
-        //:::无左右孩子
-        if(target.left == null && target.right == null){
-            RelativePosition relativePosition = getRelativeByParent(parent,target);
+        //:::既有左孩子，又有右孩子
+        if(target.left != null && target.right != null){
+            //:::找到直接后继(右侧的最左节点)
+            EntryNode<K,V> targetSuccessor = target.right;
+            while(targetSuccessor.left != null){
+                targetSuccessor = targetSuccessor.left;
+            }
+
+            //:::target的key/value和自己的后继交换
+            target.key = targetSuccessor.key;
+            target.value = targetSuccessor.value;
+            //:::target指向自己的后继，转换为第一/第二种情况
+            target = targetSuccessor;
+        }
+
+        EntryNode<K,V> parent = target.parent;
+        RelativePosition relativePosition = getRelativeByParent(parent,target);
+        //:::获得代替被删除节点原先位置的节点(从左右孩子中选择一个)
+        EntryNode<K,V> replacement = (target.left != null ? target.left : target.right);
+        if(replacement == null){
+            //:::无左右孩子
+
             //:::直接删除,断开和双亲节点的联系
             if(relativePosition == RelativePosition.LEFT){
                 parent.left = null;
@@ -322,11 +340,17 @@ public class TreeMap<K,V> implements Map<K,V>{
             }
 
             target.parent = null;
-            return;
+        }else{
+            //:::只有左孩子或者右孩子
+            replacement.parent = target.parent;
+
+            //:::被删除节点的双亲节点指向被代替的节点
+            if(relativePosition == RelativePosition.LEFT){
+                parent.left = replacement;
+            }else{
+                parent.right = replacement;
+            }
         }
-
-        //:::只有左孩子或者右孩子
-
     }
 
     private RelativePosition getRelativeByParent(EntryNode<K,V> parent,EntryNode<K,V> target){
