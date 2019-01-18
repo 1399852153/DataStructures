@@ -2,6 +2,7 @@ package com.xiongyx.datastructures.map;
 
 import com.xiongyx.datastructures.exception.IteratorStateErrorException;
 import com.xiongyx.datastructures.iterator.Iterator;
+import java.util.Comparator;
 import java.util.Objects;
 
 /**
@@ -18,6 +19,11 @@ public class TreeMap<K,V> implements Map<K,V>{
     private EntryNode<K,V> root;
 
     /**
+     * 比较器(初始化之后，不能改)
+     * */
+    private final Comparator<? super K> comparator;
+
+    /**
      * 当前二叉树的大小
      * */
     private int size;
@@ -26,7 +32,14 @@ public class TreeMap<K,V> implements Map<K,V>{
      * 默认构造函数
      * */
     public TreeMap() {
-        this.size = 0;
+        this.comparator = null;
+    }
+
+    /**
+     * 指定了比较器的构造函数
+     * */
+    public TreeMap(Comparator<? super K> comparator) {
+        this.comparator = comparator;
     }
 
     /**
@@ -187,7 +200,6 @@ public class TreeMap<K,V> implements Map<K,V>{
     @Override
     public V put(K key, V value) {
         if(this.root == null){
-            compare(key,key);
             this.root = new EntryNode<>(key,value);
             this.size++;
             return null;
@@ -360,9 +372,12 @@ public class TreeMap<K,V> implements Map<K,V>{
             }
         }
 
+        //:::没有找到目标节点
         if(compareResult > 0){
+            //:::返回 右孩子 哨兵节点
             return new TargetEntryNode<>(null, parent, RelativePosition.RIGHT);
         }else if(compareResult < 0){
+            //:::返回 左孩子 哨兵节点
             return new TargetEntryNode<>(null, parent, RelativePosition.LEFT);
         }else{
             throw new RuntimeException("状态异常");
@@ -374,7 +389,14 @@ public class TreeMap<K,V> implements Map<K,V>{
      * */
     @SuppressWarnings("unchecked")
     private int compare(K k1,K k2){
-        return ((Comparable) k1).compareTo(k2);
+        //:::迭代器不存在
+        if(this.comparator == null){
+            //:::依赖对象本身的 Comparable，可能会转型失败
+            return ((Comparable) k1).compareTo(k2);
+        }else{
+            //:::通过迭代器逻辑进行比较
+            return this.comparator.compare(k1,k2);
+        }
     }
 
     /**

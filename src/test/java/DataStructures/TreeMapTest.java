@@ -3,6 +3,7 @@ package DataStructures;
 import com.xiongyx.datastructures.iterator.Iterator;
 import com.xiongyx.datastructures.map.Map;
 import com.xiongyx.datastructures.map.TreeMap;
+import java.util.Comparator;
 
 /**
  * @Author xiongyx
@@ -10,7 +11,10 @@ import com.xiongyx.datastructures.map.TreeMap;
  */
 public class TreeMapTest {
     public static void main(String[] args){
-        TreeMap<Integer,String> treeMap = new TreeMap<>();
+        //:::反向比较
+        TreeMap<Integer,String> treeMap = new TreeMap<>(
+            (o1, o2) -> -(o1.compareTo(o2))
+        );
         treeMap.put(3,"3");
         treeMap.put(2,"2");
         treeMap.put(1,"1");
