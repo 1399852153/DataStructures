@@ -1,9 +1,11 @@
 package com.xiongyx.datastructures.map;
 
 import com.xiongyx.datastructures.exception.IteratorStateErrorException;
+import com.xiongyx.datastructures.functioninterface.Comparator;
 import com.xiongyx.datastructures.iterator.Iterator;
-import java.util.Comparator;
+
 import java.util.Objects;
+
 
 /**
  * @Author xiongyx
