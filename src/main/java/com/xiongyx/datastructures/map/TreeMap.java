@@ -68,19 +68,15 @@ public class TreeMap<K,V> implements Map<K,V>{
      * 二叉搜索树 内部节点
      * */
     static class EntryNode<K,V> implements Map.EntryNode<K,V>{
+        /**
+         * key值
+         * */
         K key;
+
+        /**
+         * value值
+         * */
         V value;
-
-        EntryNode(K key, V value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        EntryNode(K key, V value,EntryNode<K,V> parent) {
-            this.key = key;
-            this.value = value;
-            this.parent = parent;
-        }
 
         /**
          * 左孩子节点
@@ -96,6 +92,17 @@ public class TreeMap<K,V> implements Map<K,V>{
          * 双亲节点
          * */
         EntryNode<K,V> parent;
+
+        EntryNode(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        EntryNode(K key, V value,EntryNode<K,V> parent) {
+            this.key = key;
+            this.value = value;
+            this.parent = parent;
+        }
 
         @Override
         public K getKey() {
@@ -525,7 +532,7 @@ public class TreeMap<K,V> implements Map<K,V>{
 
         EntryNode<K,V> entryNode = this.root;
 
-        //:::循环往复，寻找整棵树的最左节点(第一个节点)
+        //:::循环往复，寻找整棵树的最左节点(最小节点、第一个节点)
         while(entryNode.left != null){
             entryNode = entryNode.left;
         }
