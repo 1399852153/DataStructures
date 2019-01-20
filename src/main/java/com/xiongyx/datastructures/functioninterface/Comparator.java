@@ -3,6 +3,8 @@ package com.xiongyx.datastructures.functioninterface;
 /**
  * @Author xiongyx
  * on 2019/1/20.
+ *
+ * 大小比较逻辑接口
  */
 @FunctionalInterface
 public interface Comparator<T> {
