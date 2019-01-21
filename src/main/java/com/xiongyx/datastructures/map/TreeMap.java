@@ -258,7 +258,6 @@ public class TreeMap<K,V> implements Map<K,V>{
             //:::从二叉树中删除目标节点
             deleteEntryNode(targetEntryNode.target);
 
-            this.size--;
             return targetEntryNode.target.value;
         }
     }
@@ -425,7 +424,7 @@ public class TreeMap<K,V> implements Map<K,V>{
          * */
 
         //:::size自减1
-        size--;
+        this.size--;
 
         //:::既有左孩子，又有右孩子
         if(target.left != null && target.right != null){
