@@ -18,17 +18,17 @@ public class TreeMap<K,V> implements Map<K,V>{
     /**
      * 根节点
      * */
-    private EntryNode<K,V> root;
+    protected EntryNode<K,V> root;
 
     /**
      * 比较器(初始化之后，不能改)
      * */
-    private final Comparator<? super K> comparator;
+    protected final Comparator<? super K> comparator;
 
     /**
      * 当前二叉树的大小
      * */
-    private int size;
+    protected int size;
 
     /**
      * 默认构造函数
@@ -47,7 +47,7 @@ public class TreeMap<K,V> implements Map<K,V>{
     /**
      * target 和目标节点的相对位置
      * */
-    private enum RelativePosition {
+    protected enum RelativePosition {
         /**
          * 左节点
          * */
@@ -183,21 +183,21 @@ public class TreeMap<K,V> implements Map<K,V>{
     /**
      * 查找目标节点 返回值
      * */
-    private static class TargetEntryNode<K,V>{
+    protected static class TargetEntryNode<K,V>{
         /**
          * 目标节点
          * */
-        private EntryNode<K,V> target;
+        protected EntryNode<K,V> target;
 
         /**
          * 目标节点的双亲节点
          * */
-        private EntryNode<K,V> parent;
+        protected EntryNode<K,V> parent;
 
         /**
          * 相对位置
          * */
-        private RelativePosition relativePosition;
+        protected RelativePosition relativePosition;
 
         TargetEntryNode(EntryNode<K, V> target, EntryNode<K, V> parent, RelativePosition relativePosition) {
             this.target = target;
@@ -361,7 +361,7 @@ public class TreeMap<K,V> implements Map<K,V>{
      * @return      对应的目标节点
      *               返回null代表 目标节点不存在
      * */
-    private TargetEntryNode<K,V> getTargetEntryNode(K key){
+    protected TargetEntryNode<K,V> getTargetEntryNode(K key){
         int compareResult = 0;
         EntryNode<K,V> parent = null;
         EntryNode<K,V> currentNode = this.root;
