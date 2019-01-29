@@ -110,6 +110,12 @@ public class AVLTree<K,V> extends TreeMap<K,V>{
             if(!isAVLBalanced(currentAncestorNode)){
                 //:::不平衡
 
+                //:::获得更高子树分支对应的孙辈节点，决定AVL树重平衡的策略
+                EntryNode<K,V> tallerSonNode = getTallerChild(currentAncestorNode);
+                EntryNode<K,V> tallerGrandSonNode = getTallerChild(tallerSonNode);
+
+                //:::以孙辈节点为基准，进行旋转，重平衡
+                rotateAt(tallerGrandSonNode);
             }else{
                 //:::平衡
 
@@ -164,8 +170,15 @@ public class AVLTree<K,V> extends TreeMap<K,V>{
      * 获得较高子树分支孩子节点
      */
     private EntryNode<K,V> getTallerChild(EntryNode<K,V> entryNode){
+        int leftChildHeight = getHeight(entryNode.left);
+        int rightChildHeight = getHeight(entryNode.right);
 
-
-        return null;
+        if(leftChildHeight > rightChildHeight){
+            //:::左子树高度 > 右子树高度
+            return entryNode.left;
+        }else{
+            //:::左子树高度 <= 右子树高度
+            return entryNode.right;
+        }
     }
 }
