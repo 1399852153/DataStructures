@@ -439,29 +439,46 @@ public class TreeMap<K,V> implements Map<K,V>{
         }
 
         EntryNode<K,V> parent = target.parent;
-        RelativePosition relativePosition = getRelativeByParent(parent,target);
         //:::获得代替被删除节点原先位置的节点(从左右孩子中选择一个)
         EntryNode<K,V> replacement = (target.left != null ? target.left : target.right);
+
         if(replacement == null){
             //:::无左右孩子
 
-            //:::直接删除,断开和双亲节点的联系
-            if(relativePosition == RelativePosition.LEFT){
-                parent.left = null;
+            //:::被删除的target是根节点，且无左右孩子
+            if(parent == null){
+                //:::全树置空
+                this.root = null;
             }else{
-                parent.right = null;
-            }
+                RelativePosition relativePosition = getRelativeByParent(parent,target);
 
-            target.parent = null;
+                //:::直接删除,断开和双亲节点的联系
+                if(relativePosition == RelativePosition.LEFT){
+                    parent.left = null;
+                }else{
+                    parent.right = null;
+                }
+
+                target.parent = null;
+            }
         }else{
             //:::只有左孩子或者右孩子
-            replacement.parent = target.parent;
 
-            //:::被删除节点的双亲节点指向被代替的节点
-            if(relativePosition == RelativePosition.LEFT){
-                parent.left = replacement;
+            //:::被删除的target是根节点，且只有左孩子或者右孩子
+            if(target.parent == null){
+                //:::将存在的子树孩子节点，设置为根节点
+                this.root = replacement;
             }else{
-                parent.right = replacement;
+                replacement.parent = target.parent;
+
+                RelativePosition relativePosition = getRelativeByParent(parent,target);
+
+                //:::被删除节点的双亲节点指向被代替的节点
+                if(relativePosition == RelativePosition.LEFT){
+                    parent.left = replacement;
+                }else{
+                    parent.right = replacement;
+                }
             }
         }
     }
