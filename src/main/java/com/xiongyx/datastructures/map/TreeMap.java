@@ -472,7 +472,7 @@ public class TreeMap<K,V> implements Map<K,V>{
      * @param target    目标节点
      * @return          相对位置(左孩子/右孩子)
      */
-    private RelativePosition getRelativeByParent(EntryNode<K,V> parent,EntryNode<K,V> target){
+    protected RelativePosition getRelativeByParent(EntryNode<K,V> parent,EntryNode<K,V> target){
         if(parent.left == target){
             return RelativePosition.LEFT;
         }else if(parent.right == target){
