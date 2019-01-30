@@ -18,12 +18,12 @@ public class TreeMap<K,V> implements Map<K,V>{
     /**
      * 根节点
      * */
-    protected EntryNode<K,V> root;
+    EntryNode<K,V> root;
 
     /**
      * 比较器(初始化之后，不能改)
      * */
-    protected final Comparator<? super K> comparator;
+    private final Comparator<? super K> comparator;
 
     /**
      * 当前二叉树的大小
@@ -183,21 +183,21 @@ public class TreeMap<K,V> implements Map<K,V>{
     /**
      * 查找目标节点 返回值
      * */
-    protected static class TargetEntryNode<K,V>{
+    static class TargetEntryNode<K,V>{
         /**
          * 目标节点
          * */
-        protected EntryNode<K,V> target;
+        EntryNode<K,V> target;
 
         /**
          * 目标节点的双亲节点
          * */
-        protected EntryNode<K,V> parent;
+        EntryNode<K,V> parent;
 
         /**
          * 相对位置
          * */
-        protected RelativePosition relativePosition;
+        RelativePosition relativePosition;
 
         TargetEntryNode(EntryNode<K, V> target, EntryNode<K, V> parent, RelativePosition relativePosition) {
             this.target = target;
@@ -361,7 +361,7 @@ public class TreeMap<K,V> implements Map<K,V>{
      * @return      对应的目标节点
      *               返回null代表 目标节点不存在
      * */
-    protected TargetEntryNode<K,V> getTargetEntryNode(K key){
+    TargetEntryNode<K,V> getTargetEntryNode(K key){
         int compareResult = 0;
         EntryNode<K,V> parent = null;
         EntryNode<K,V> currentNode = this.root;
@@ -411,7 +411,7 @@ public class TreeMap<K,V> implements Map<K,V>{
      * 将目标节点从二叉搜索树中删除
      * @param target 需要被删除的节点
      * */
-    private void deleteEntryNode(EntryNode<K,V> target){
+    void deleteEntryNode(EntryNode<K,V> target){
         /*
          * 删除二叉搜索树节点
          * 	1.无左右孩子
@@ -472,7 +472,7 @@ public class TreeMap<K,V> implements Map<K,V>{
      * @param target    目标节点
      * @return          相对位置(左孩子/右孩子)
      */
-    protected RelativePosition getRelativeByParent(EntryNode<K,V> parent,EntryNode<K,V> target){
+    RelativePosition getRelativeByParent(EntryNode<K, V> parent, EntryNode<K, V> target){
         if(parent.left == target){
             return RelativePosition.LEFT;
         }else if(parent.right == target){

@@ -49,12 +49,121 @@ public class AVLTree<K,V> extends TreeMap<K,V>{
 
     @Override
     public V remove(K key) {
-        V returnValue = super.remove(key);
+        if(this.root == null){
+            return null;
+        }
 
-        //判断删除之后，二叉搜索树是否失去了平衡
-        //进行重平衡
+        //查询目标节点
+        TargetEntryNode<K,V> targetEntryNode = getTargetEntryNode(key);
+        if(targetEntryNode.relativePosition != RelativePosition.CURRENT){
+            //没有找到目标节点
+            return null;
+        }else{
+            //找到了目标节点
+            EntryNode<K,V> target = targetEntryNode.target;
+            //先保存被删除节点 删除之前的双亲节点
+            EntryNode<K,V> parent = target.parent;
 
-        return returnValue;
+            //从二叉树中删除目标节点
+            deleteEntryNode(target);
+
+            //删除节点后，对其历代祖先节点进行重平衡操作
+            afterNodeRemove(parent);
+
+            return targetEntryNode.target.value;
+        }
+    }
+
+    /**
+     * 插入后 重平衡操作
+     * @param newEntryNode 新插入的节点
+     * */
+    private void afterNewNodeInsert(EntryNode<K,V> newEntryNode){
+        EntryNode<K,V> currentAncestorNode = newEntryNode.parent;
+
+        //遍历新插入节点的祖先节点,逐层向上
+        while(currentAncestorNode != null){
+            //判断当前祖先节点是否失去平衡
+            if(!isAVLBalanced(currentAncestorNode)){
+                //不平衡
+
+                //获得重构之前 失衡节点的父节点及其相对位置
+                EntryNode<K,V> parent = currentAncestorNode.parent;
+                //获得更高子树分支对应的孙辈节点，决定AVL树重平衡的策略
+                EntryNode<K,V> tallerSonNode = getTallerChild(currentAncestorNode);
+                EntryNode<K,V> tallerGrandSonNode = getTallerChild(tallerSonNode);
+                //以孙辈节点为基准，进行旋转，重平衡
+                EntryNode<K,V> newSubTreeRoot = rotateAt(currentAncestorNode,tallerSonNode,tallerGrandSonNode);
+
+                //重构之后的子树 重新和全树对接
+                newSubTreeRoot.parent = parent;
+                //可能currentAncestorNode是根节点，不存在双亲节点
+                if(parent != null){
+                    //原子树根节点的双亲节点 和新的子树进行连接
+                    if(isLeftChild(parent,currentAncestorNode)){
+                        parent.left = newSubTreeRoot;
+                    }else{
+                        parent.right = newSubTreeRoot;
+                    }
+                }else{
+                    this.root = newSubTreeRoot;
+                }
+                //插入时，最低失衡节点重平衡后，全树即恢复平衡，因此结束循环
+                return;
+            }else{
+                //平衡
+
+                //todo 更新当前祖先节点的高度
+            }
+
+            //指向上一层祖先节点
+            currentAncestorNode = currentAncestorNode.parent;
+        }
+    }
+
+    /**
+     * 插入后 重平衡操作
+     * @param deletedNode 被删除的节点
+     * */
+    private void afterNodeRemove(EntryNode<K,V> deletedNode){
+        EntryNode<K,V> currentAncestorNode = deletedNode;
+
+        //遍历新插入节点的祖先节点,逐层向上
+        while(currentAncestorNode != null){
+            //判断当前祖先节点是否失去平衡
+            if(!isAVLBalanced(currentAncestorNode)){
+                //不平衡
+
+                //获得重构之前 失衡节点的父节点及其相对位置
+                EntryNode<K,V> parent = currentAncestorNode.parent;
+                //获得更高子树分支对应的孙辈节点，决定AVL树重平衡的策略
+                EntryNode<K,V> tallerSonNode = getTallerChild(currentAncestorNode);
+                EntryNode<K,V> tallerGrandSonNode = getTallerChild(tallerSonNode);
+                //以孙辈节点为基准，进行旋转，重平衡
+                EntryNode<K,V> newSubTreeRoot = rotateAt(currentAncestorNode,tallerSonNode,tallerGrandSonNode);
+
+                //重构之后的子树 重新和全树对接
+                newSubTreeRoot.parent = parent;
+                //可能currentAncestorNode是根节点，不存在双亲节点
+                if(parent != null){
+                    //原子树根节点的双亲节点 和新的子树进行连接
+                    if(isLeftChild(parent,currentAncestorNode)){
+                        parent.left = newSubTreeRoot;
+                    }else{
+                        parent.right = newSubTreeRoot;
+                    }
+                }else{
+                    this.root = newSubTreeRoot;
+                }
+            }else{
+                //平衡
+
+                //todo 更新当前祖先节点的高度
+            }
+
+            //指向上一层祖先节点
+            currentAncestorNode = currentAncestorNode.parent;
+        }
     }
 
     /**
@@ -99,54 +208,6 @@ public class AVLTree<K,V> extends TreeMap<K,V>{
     }
 
     /**
-     * 插入后 重平衡操作
-     * */
-    private void afterNewNodeInsert(EntryNode<K,V> newEntryNode){
-        EntryNode<K,V> currentAncestorNode = newEntryNode.parent;
-
-        //遍历新插入节点的祖先节点,逐层向上
-        while(currentAncestorNode != null){
-            //判断当前祖先节点是否失去平衡
-            if(!isAVLBalanced(currentAncestorNode)){
-                //不平衡
-
-                //获得重构之前 失衡节点的父节点及其相对位置
-                EntryNode<K,V> parent = currentAncestorNode.parent;
-
-                //获得更高子树分支对应的孙辈节点，决定AVL树重平衡的策略
-                EntryNode<K,V> tallerSonNode = getTallerChild(currentAncestorNode);
-                EntryNode<K,V> tallerGrandSonNode = getTallerChild(tallerSonNode);
-
-                //以孙辈节点为基准，进行旋转，重平衡
-                EntryNode<K,V> newSubTreeRoot = rotateAt(currentAncestorNode,tallerSonNode,tallerGrandSonNode);
-
-                //重构之后的子树 重新和全树对接
-
-                //指定子树的parent
-                newSubTreeRoot.parent = parent;
-                //可能currentAncestorNode是根节点，不存在双亲节点
-                if(parent != null){
-                    //原子树根节点的双亲节点 和新的子树进行连接
-                    boolean isLeft = isLeftChild(parent,currentAncestorNode);
-                    if(isLeft){
-                        parent.left = newSubTreeRoot;
-                    }else{
-                        parent.right = newSubTreeRoot;
-                    }
-                }else{
-                    this.root = newSubTreeRoot;
-                }
-            }else{
-                //平衡
-
-                //todo 更新当前祖先节点的高度
-            }
-
-            currentAncestorNode = currentAncestorNode.parent;
-        }
-    }
-
-    /**
      * 当前节点 是否满足AVL树约定的平衡条件
      * */
     private boolean isAVLBalanced(EntryNode<K,V> entryNode){
@@ -184,13 +245,6 @@ public class AVLTree<K,V> extends TreeMap<K,V>{
      * @return 重构之后子树的树根节点
      * */
     private EntryNode<K,V> rotateAt(EntryNode<K,V> currentNode,EntryNode<K,V> sonNode,EntryNode<K,V> grandSonNode){
-        //左 zig
-            //左-左   zig-zig
-            //左-右   zig-zag
-        //右 zag
-            //右-左   zag-zig
-            //右-右   zag-zag
-
         if(isLeftChild(currentNode,sonNode)){
             //左 zig
             if(isLeftChild(sonNode,grandSonNode)){
