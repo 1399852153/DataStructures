@@ -1,8 +1,8 @@
 package DataStructures;
 
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.TreeMap;
+import com.xiongyx.datastructures.iterator.Iterator;
+import com.xiongyx.datastructures.map.Map;
+import com.xiongyx.datastructures.map.TreeMap;
 
 /**
  * @Author xiongyx
@@ -10,7 +10,7 @@ import java.util.TreeMap;
  */
 public class AVLTreeTest {
     public static void main(String[] args) {
-        int num = 10;
+        int num = 100;
 
 //        testAVL(num);
 
@@ -57,19 +57,19 @@ public class AVLTreeTest {
             normalBST.put(data,data+"");
         }
 
-//        System.out.println(notmalBST);
+        System.out.println(normalBST);
 
         long endInsert = System.currentTimeMillis();
         System.out.println("插入BST spend=" + (endInsert - startInsert));
 
         long startRemove = System.currentTimeMillis();
-        Iterator<Entry<Integer,String>> iterator = normalBST.entrySet().iterator();
+        Iterator<Map.EntryNode<Integer,String>> iterator = normalBST.iterator();
         while(iterator.hasNext()){
             if(iterator.next().getKey() % 5 == 0){
                 iterator.remove();
             }
         }
-//        System.out.println(notmalBST);
+        System.out.println(normalBST);
 
         long endRemove = System.currentTimeMillis();
         System.out.println("删除BST spend=" + (endRemove - startRemove));
