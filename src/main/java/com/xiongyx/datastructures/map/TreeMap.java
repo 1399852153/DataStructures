@@ -79,6 +79,11 @@ public class TreeMap<K,V> implements Map<K,V>{
         V value;
 
         /**
+         * 高度值
+         * */
+        int height;
+
+        /**
          * 左孩子节点
          * */
         EntryNode<K,V> left;
@@ -96,12 +101,14 @@ public class TreeMap<K,V> implements Map<K,V>{
         EntryNode(K key, V value) {
             this.key = key;
             this.value = value;
+            this.height = 1;
         }
 
         EntryNode(K key, V value,EntryNode<K,V> parent) {
             this.key = key;
             this.value = value;
             this.parent = parent;
+            this.height = 1;
         }
 
         @Override
@@ -121,7 +128,7 @@ public class TreeMap<K,V> implements Map<K,V>{
 
         @Override
         public String toString() {
-            return key + "=" + value;
+            return key + "=" + value + " height=" + height;
         }
     }
 

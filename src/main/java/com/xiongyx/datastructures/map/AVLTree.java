@@ -113,7 +113,8 @@ public class AVLTree<K,V> extends TreeMap<K,V>{
             }else{
                 //平衡
 
-                //todo 更新当前祖先节点的高度
+                //更新当前祖先节点的高度
+                updateHeight(currentAncestorNode);
             }
 
             //指向上一层祖先节点
@@ -158,7 +159,8 @@ public class AVLTree<K,V> extends TreeMap<K,V>{
             }else{
                 //平衡
 
-                //todo 更新当前祖先节点的高度
+                //更新当前祖先节点的高度
+                updateHeight(currentAncestorNode);
             }
 
             //指向上一层祖先节点
@@ -184,7 +186,8 @@ public class AVLTree<K,V> extends TreeMap<K,V>{
         if(lrChild != null){
             lrChild.parent = leftNode;
         }
-        //todo updateHeight leftNode
+        //更新高度
+        updateHeight(leftNode);
 
         //调整 右节点和对应子树的拓扑结构
         rightNode.left = rlChild;
@@ -196,7 +199,8 @@ public class AVLTree<K,V> extends TreeMap<K,V>{
         if(rrChild != null){
             rrChild.parent = rightNode;
         }
-        //todo updateHeight rightNode
+        //更新高度
+        updateHeight(rightNode);
 
         //调整 中间节点 和左、右节点的拓扑结构
         middleNode.left = leftNode;
@@ -204,7 +208,8 @@ public class AVLTree<K,V> extends TreeMap<K,V>{
 
         leftNode.parent = middleNode;
         rightNode.parent = middleNode;
-        //todo updateHeight middleNode
+        //更新高度
+        updateHeight(middleNode);
     }
 
     /**
@@ -223,6 +228,14 @@ public class AVLTree<K,V> extends TreeMap<K,V>{
         return -1 <= difference && difference <= 1;
     }
 
+    private void updateHeight(EntryNode<K,V> entryNode){
+        int leftHeight = getHeight(entryNode.left);
+        int rightHeight = getHeight(entryNode.right);
+
+        //:::左右子树高度较高者 + 1
+        entryNode.height = 1 + Math.max(leftHeight,rightHeight);
+    }
+
     /**
      * 获得当前节点的高度
      * */
@@ -230,13 +243,7 @@ public class AVLTree<K,V> extends TreeMap<K,V>{
         if(entryNode == null){
             return 0;
         }else{
-            //获得 左子树高度
-            int leftChildHeight = getHeight(entryNode.left);
-            //获得右子树高度
-            int rightChildHeight = getHeight(entryNode.right);
-
-            //当前节点高度 = 更高子树分支高度 + 1
-            return Math.max(leftChildHeight,rightChildHeight) + 1;
+            return entryNode.height;
         }
     }
 

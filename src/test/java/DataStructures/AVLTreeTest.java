@@ -27,7 +27,7 @@ public class AVLTreeTest {
         for(int i=1; i<=num; i++){
 //            System.out.println("i=" + i);
 
-            int data = (int)(Math.random() * i);
+            int data = getData(i);
             avlTree.put(data,data+"");
         }
 
@@ -56,7 +56,7 @@ public class AVLTreeTest {
         for(int i=1; i<=num; i++){
 //            System.out.println("i=" + i);
 
-            int data = (int)(Math.random() * i);
+            int data = getData(i);
             normalBST.put(data,data+"");
         }
 
@@ -85,14 +85,14 @@ public class AVLTreeTest {
         for(int i=1; i<=num; i++){
 //            System.out.println("i=" + i);
 
-            int data = (int)(Math.random() * i);
+            int data = getData(i);
             normalBST.put(data,data+"");
         }
 
 //        System.out.println(normalBST);
 
         long endInsert = System.currentTimeMillis();
-        System.out.println("插入BST spend=" + (endInsert - startInsert));
+        System.out.println("插入JDK BST spend=" + (endInsert - startInsert));
 
         long startRemove = System.currentTimeMillis();
         java.util.Iterator<java.util.Map.Entry<Integer,String>> iterator = normalBST.entrySet().iterator();
@@ -104,6 +104,11 @@ public class AVLTreeTest {
 //        System.out.println(normalBST);
 
         long endRemove = System.currentTimeMillis();
-        System.out.println("删除BST spend=" + (endRemove - startRemove));
+        System.out.println("删除JDK BST spend=" + (endRemove - startRemove));
+    }
+
+    private static int getData(int i){
+        //(int)(Math.random() * i)
+        return i;
     }
 }
