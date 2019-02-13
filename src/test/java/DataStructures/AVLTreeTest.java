@@ -43,7 +43,7 @@ public class AVLTreeTest {
                 iterator.remove();
             }
         }
-//        System.out.println(avlTree);
+        System.out.println(avlTree.size());
 
         long endRemove = System.currentTimeMillis();
         System.out.println("删除avl spend=" + (endRemove - startRemove));
@@ -60,8 +60,6 @@ public class AVLTreeTest {
             normalBST.put(data,data+"");
         }
 
-//        System.out.println(normalBST);
-
         long endInsert = System.currentTimeMillis();
         System.out.println("插入BST spend=" + (endInsert - startInsert));
 
@@ -72,21 +70,21 @@ public class AVLTreeTest {
                 iterator.remove();
             }
         }
-//        System.out.println(normalBST);
+        System.out.println(normalBST.size());
 
         long endRemove = System.currentTimeMillis();
         System.out.println("删除BST spend=" + (endRemove - startRemove));
     }
 
     private static void testJDKTreeMap(int num){
-        java.util.TreeMap<Integer,String> normalBST = new java.util.TreeMap<>();
+        java.util.TreeMap<Integer,String> jdkTreeMap = new java.util.TreeMap<>();
 
         long startInsert = System.currentTimeMillis();
         for(int i=1; i<=num; i++){
 //            System.out.println("i=" + i);
 
             int data = getData(i);
-            normalBST.put(data,data+"");
+            jdkTreeMap.put(data,data+"");
         }
 
 //        System.out.println(normalBST);
@@ -95,13 +93,13 @@ public class AVLTreeTest {
         System.out.println("插入JDK BST spend=" + (endInsert - startInsert));
 
         long startRemove = System.currentTimeMillis();
-        java.util.Iterator<java.util.Map.Entry<Integer,String>> iterator = normalBST.entrySet().iterator();
+        java.util.Iterator<java.util.Map.Entry<Integer,String>> iterator = jdkTreeMap.entrySet().iterator();
         while(iterator.hasNext()){
             if(iterator.next().getKey() % 5 == 0){
                 iterator.remove();
             }
         }
-//        System.out.println(normalBST);
+        System.out.println(jdkTreeMap.size());
 
         long endRemove = System.currentTimeMillis();
         System.out.println("删除JDK BST spend=" + (endRemove - startRemove));

@@ -87,7 +87,7 @@ public class AVLTree<K,V> extends TreeMap<K,V>{
             if(!isAVLBalanced(currentAncestorNode)){
                 //不平衡
 
-                //获得重构之前 失衡节点的父节点及其相对位置
+                //获得重构之前 失衡节点的父节点及其相对位置，用于之后重新连接重平衡后的子树
                 EntryNode<K,V> parent = currentAncestorNode.parent;
                 //获得更高子树分支对应的孙辈节点，决定AVL树重平衡的策略
                 EntryNode<K,V> tallerSonNode = getTallerChild(currentAncestorNode);
@@ -213,41 +213,6 @@ public class AVLTree<K,V> extends TreeMap<K,V>{
     }
 
     /**
-     * 当前节点 是否满足AVL树约定的平衡条件
-     * */
-    private boolean isAVLBalanced(EntryNode<K,V> entryNode){
-        //获得 左子树高度
-        int leftChildHeight = getHeight(entryNode.left);
-        //获得右子树高度
-        int rightChildHeight = getHeight(entryNode.right);
-
-        //获得左右子树高度差
-        int difference = leftChildHeight - rightChildHeight;
-
-        //高度差绝对值在1之内,认为是满足AVL平衡条件
-        return -1 <= difference && difference <= 1;
-    }
-
-    private void updateHeight(EntryNode<K,V> entryNode){
-        int leftHeight = getHeight(entryNode.left);
-        int rightHeight = getHeight(entryNode.right);
-
-        //:::左右子树高度较高者 + 1
-        entryNode.height = 1 + Math.max(leftHeight,rightHeight);
-    }
-
-    /**
-     * 获得当前节点的高度
-     * */
-    private int getHeight(EntryNode<K,V> entryNode){
-        if(entryNode == null){
-            return 0;
-        }else{
-            return entryNode.height;
-        }
-    }
-
-    /**
      * 进行旋转,使用3+4重构完成重平衡
      * @return 重构之后子树的树根节点
      * */
@@ -278,10 +243,48 @@ public class AVLTree<K,V> extends TreeMap<K,V>{
             }else{
                 //右-右   zag-zag旋转
                 refactor34(currentNode,sonNode,grandSonNode,
-                currentNode.left,sonNode.left,grandSonNode.left,grandSonNode.right);
+                    currentNode.left,sonNode.left,grandSonNode.left,grandSonNode.right);
 
                 return sonNode;
             }
+        }
+    }
+
+    /**
+     * 当前节点 是否满足AVL树约定的平衡条件
+     * */
+    private boolean isAVLBalanced(EntryNode<K,V> entryNode){
+        //获得 左子树高度
+        int leftChildHeight = getHeight(entryNode.left);
+        //获得右子树高度
+        int rightChildHeight = getHeight(entryNode.right);
+
+        //获得左右子树高度差
+        int difference = leftChildHeight - rightChildHeight;
+
+        //高度差绝对值在1之内,认为是满足AVL平衡条件
+        return -1 <= difference && difference <= 1;
+    }
+
+    /**
+     * 更新当前节点高度
+     * */
+    private void updateHeight(EntryNode<K,V> entryNode){
+        int leftHeight = getHeight(entryNode.left);
+        int rightHeight = getHeight(entryNode.right);
+
+        //左右子树高度较高者 + 1
+        entryNode.height = 1 + Math.max(leftHeight,rightHeight);
+    }
+
+    /**
+     * 获得当前节点的高度
+     * */
+    private int getHeight(EntryNode<K,V> entryNode){
+        if(entryNode == null){
+            return 0;
+        }else{
+            return entryNode.height;
         }
     }
 
