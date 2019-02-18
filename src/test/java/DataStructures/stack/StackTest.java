@@ -1,4 +1,4 @@
-package DataStructures;
+package DataStructures.stack;
 
 import com.xiongyx.datastructures.stack.ParenthesisMatchingUtil;
 import com.xiongyx.datastructures.stack.Stack;

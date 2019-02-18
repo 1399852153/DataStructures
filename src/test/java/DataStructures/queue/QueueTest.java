@@ -1,4 +1,4 @@
-package DataStructures;
+package DataStructures.queue;
 
 import com.xiongyx.datastructures.queue.ArrayDeque;
 import com.xiongyx.datastructures.queue.Deque;

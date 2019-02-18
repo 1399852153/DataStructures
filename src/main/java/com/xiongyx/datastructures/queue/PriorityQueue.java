@@ -6,28 +6,28 @@ package com.xiongyx.datastructures.queue;
  *
  * 优先级队列 ADT接口
  */
-public interface PriorityQueue <T>{
+public interface PriorityQueue <E>{
 
     /**
-     * 插入数据
+     * 插入新数据
      * @param newData 新数据
      * */
-    void insert(T newData);
+    void insert(E newData);
 
     /**
-     * 获得优先级最大值
+     * 获得优先级最大值（窥视）
      * @return  当前优先级最大的数据
      * */
-    T getMax();
+    E peekMax();
 
     /**
-     * 删除当前优先级最大值
+     * 获得并且删除当前优先级最大值
      * @return  被删除的 当前优先级最大的数据
      */
-    T delMax();
+    E popMax();
 
     /**
-     *
+     * 获得当前优先级队列 元素个数
      * */
     int size();
 }

@@ -1,4 +1,4 @@
-package DataStructures;
+package DataStructures.map;
 
 import com.xiongyx.datastructures.iterator.Iterator;
 import com.xiongyx.datastructures.map.AVLTree;

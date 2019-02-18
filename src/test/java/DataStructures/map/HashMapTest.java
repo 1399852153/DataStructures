@@ -1,4 +1,4 @@
-package DataStructures;
+package DataStructures.map;
 
 
 /**

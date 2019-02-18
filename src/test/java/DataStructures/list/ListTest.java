@@ -1,4 +1,4 @@
-package DataStructures;
+package DataStructures.list;
 
 
 import com.xiongyx.datastructures.iterator.Iterator;

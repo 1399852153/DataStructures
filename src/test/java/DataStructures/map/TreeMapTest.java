@@ -1,5 +1,6 @@
-package DataStructures;
+package DataStructures.map;
 
+import DataStructures.util.CommonUtil;
 import com.xiongyx.datastructures.iterator.Iterator;
 import com.xiongyx.datastructures.map.Map;
 import com.xiongyx.datastructures.map.TreeMap;

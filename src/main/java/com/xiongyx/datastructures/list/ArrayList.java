@@ -2,6 +2,7 @@ package com.xiongyx.datastructures.list;
 
 import com.xiongyx.datastructures.exception.IteratorStateErrorException;
 import com.xiongyx.datastructures.iterator.Iterator;
+import java.util.Objects;
 
 /**
  * @Author xiongyx
@@ -60,6 +61,19 @@ public class ArrayList <E> implements List <E>{
         size = 0;
         //:::设置数组大小
         elements = new Object[capacity];
+    }
+
+    /**
+     * 将指定数组转换为向量
+     * @param array 指定数组
+     * */
+    public ArrayList(E[] array) {
+        Objects.requireNonNull(array);
+
+        //:::指定size
+        size = array.length;
+        //:::将外部数组赋值给elements
+        elements = array;
     }
 
     //===============================================内部辅助方法===================================================
