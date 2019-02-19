@@ -1,6 +1,7 @@
 package com.xiongyx.datastructures.queue;
 
 import com.xiongyx.datastructures.functioninterface.Comparator;
+import com.xiongyx.datastructures.iterator.Iterator;
 import com.xiongyx.datastructures.list.ArrayList;
 
 /**
@@ -100,7 +101,7 @@ public class CompleteBinaryHeap<E> implements PriorityQueue<E>{
     @Override
     public E peekMax() {
         // 内部数组第0位 即为堆顶max
-        return innerArrayList.get(0);
+        return this.innerArrayList.get(0);
     }
 
     @Override
@@ -110,7 +111,7 @@ public class CompleteBinaryHeap<E> implements PriorityQueue<E>{
         swap(0,lastIndex);
 
         // 暂存被删除的最大元素（之前的堆顶最大元素被放到了向量末尾）
-        E max = innerArrayList.remove(lastIndex);
+        E max = this.innerArrayList.remove(lastIndex);
 
         // 对当前堆顶元素进行下滤，以恢复堆序性
         siftDown(0);
@@ -120,12 +121,12 @@ public class CompleteBinaryHeap<E> implements PriorityQueue<E>{
 
     @Override
     public int size() {
-        return innerArrayList.size();
+        return this.innerArrayList.size();
     }
 
     @Override
     public String toString() {
-        return innerArrayList.toString();
+        return this.innerArrayList.toString();
     }
 
     // =========================================内部辅助函数===========================================
@@ -161,9 +162,61 @@ public class CompleteBinaryHeap<E> implements PriorityQueue<E>{
      * */
     private void siftDown(int index){
         int size = this.size();
+        // 叶子节点不需要下滤
+        int half = size >>> 1;
 
-        while(index < size){
-           //todo 待实现
+        while(index < half){
+            int leftIndex = getLeftChildIndex(index);
+            int rightIndex = getRightChildIndex(index);
+
+            if(rightIndex < size){
+                // 右孩子存在 (下标没有越界)
+
+                E leftData = this.innerArrayList.get(leftIndex);
+                E rightData = this.innerArrayList.get(rightIndex);
+                E currentData = this.innerArrayList.get(index);
+
+                // 比较左右孩子大小
+                if(compare(leftData,rightData) >= 0){
+                    // 左孩子更大，比较双亲和左孩子
+                    if(compare(currentData,leftData) >= 0){
+                        // 双亲最大，终止下滤
+                        return;
+                    }else{
+                        // 三者中，左孩子更大，交换双亲和左孩子的位置
+                        swap(index,leftIndex);
+                        // 继续下滤操作
+                        index = leftIndex;
+                    }
+                }else{
+                    // 右孩子更大，比较双亲和右孩子
+                    if(compare(currentData,rightData) >= 0){
+                        // 双亲最大，终止下滤
+                        return;
+                    }else{
+                        // 三者中，右孩子更大，交换双亲和右孩子的位置
+                        swap(index,rightIndex);
+                        // 继续下滤操作
+                        index = rightIndex;
+                    }
+                }
+            }else{
+                // 右孩子不存在 (下标越界)
+
+                E leftData = this.innerArrayList.get(leftIndex);
+                E currentData = this.innerArrayList.get(index);
+
+                // 当前节点 大于 左孩子
+                if(compare(currentData,leftData) >= 0){
+                    // 终止下滤
+                    return;
+                }else{
+                    // 交换 左孩子和双亲的位置
+                    swap(index,leftIndex);
+                    // 继续下滤操作
+                    index = leftIndex;
+                }
+            }
         }
     }
 

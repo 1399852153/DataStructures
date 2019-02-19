@@ -1,5 +1,7 @@
 package com.xiongyx.datastructures.queue;
 
+import com.xiongyx.datastructures.iterator.Iterator;
+
 /**
  * @Author xiongyx
  * @Date 2019/2/15
@@ -28,6 +30,7 @@ public interface PriorityQueue <E>{
 
     /**
      * 获得当前优先级队列 元素个数
+     * @return 当前优先级队列 元素个数
      * */
     int size();
 }
