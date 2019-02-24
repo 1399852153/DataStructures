@@ -136,7 +136,7 @@ public class CompleteBinaryHeap<E> implements PriorityQueue<E>{
 
     // =========================================内部辅助函数===========================================
     /**
-     * 插入时，上滤操作
+     * 上滤操作
      * @param index 需要上滤的元素下标
      * */
     private void siftUp(int index){
@@ -162,7 +162,7 @@ public class CompleteBinaryHeap<E> implements PriorityQueue<E>{
     }
 
     /**
-     * 删除时，下滤操作
+     * 下滤操作
      * @param index 需要下滤的元素下标
      * */
     private void siftDown(int index){
