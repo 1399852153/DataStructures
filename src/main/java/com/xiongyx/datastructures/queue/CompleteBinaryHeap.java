@@ -1,5 +1,6 @@
 package com.xiongyx.datastructures.queue;
 
+import com.xiongyx.datastructures.exception.CollectionEmptyException;
 import com.xiongyx.datastructures.functioninterface.Comparator;
 import com.xiongyx.datastructures.iterator.Iterator;
 import com.xiongyx.datastructures.list.ArrayList;
@@ -106,6 +107,10 @@ public class CompleteBinaryHeap<E> implements PriorityQueue<E>{
 
     @Override
     public E popMax() {
+        if(this.innerArrayList.isEmpty()){
+            throw new CollectionEmptyException("当前完全二叉堆为空");
+        }
+
         // 将当前向量末尾的元素和堆顶元素交换位置
         int lastIndex = getLastIndex();
         swap(0,lastIndex);
