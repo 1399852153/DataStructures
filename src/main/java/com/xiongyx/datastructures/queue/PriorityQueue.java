@@ -33,4 +33,11 @@ public interface PriorityQueue <E>{
      * @return 当前优先级队列 元素个数
      * */
     int size();
+
+    /**
+     * 是否为空
+     * @return true 队列为空
+     *          false 队列不为空
+     * */
+    boolean isEmpty();
 }

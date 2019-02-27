@@ -24,6 +24,11 @@ public class CompleteBinaryHeap<E> implements PriorityQueue<E>{
      * */
     private final Comparator<E> comparator;
 
+    /**
+     * 当前堆的逻辑大小
+     * */
+    private int size;
+
     // ===========================================构造函数========================================
     /**
      * 无参构造函数
@@ -68,6 +73,8 @@ public class CompleteBinaryHeap<E> implements PriorityQueue<E>{
     public CompleteBinaryHeap(E[] array){
         this.innerArrayList = new ArrayList<>(array);
         this.comparator = null;
+
+        this.size = array.length;
 
         // 批量建堆
         heapify();
@@ -116,7 +123,8 @@ public class CompleteBinaryHeap<E> implements PriorityQueue<E>{
         swap(0,lastIndex);
 
         // 暂存被删除的最大元素（之前的堆顶最大元素被放到了向量末尾）
-        E max = this.innerArrayList.remove(lastIndex);
+        E max = this.innerArrayList.get(lastIndex);
+        this.size--;
 
         // 对当前堆顶元素进行下滤，以恢复堆序性
         siftDown(0);
@@ -126,12 +134,41 @@ public class CompleteBinaryHeap<E> implements PriorityQueue<E>{
 
     @Override
     public int size() {
-        return this.innerArrayList.size();
+        return this.size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return this.size() == 0;
     }
 
     @Override
     public String toString() {
-        return this.innerArrayList.toString();
+        //:::空列表
+        if(this.isEmpty()){
+            return "[]";
+        }
+
+        //:::列表起始使用"["
+        StringBuilder s = new StringBuilder("[");
+
+        //:::从第一个到倒数第二个元素之间
+        for(int i=0; i<size-1; i++){
+            //:::使用", "进行分割
+            s.append(this.innerArrayList.get(i)).append(",").append(" ");
+        }
+
+        //:::最后一个元素使用"]"结尾
+        s.append(this.innerArrayList.get(size-1)).append("]");
+        return s.toString();
+    }
+
+    public static <T> void heapSort(T[] array){
+        CompleteBinaryHeap<T> completeBinaryHeap = new CompleteBinaryHeap<>(array);
+
+        for(int i=array.length-1; i>=0; i--){
+            array[i] = completeBinaryHeap.popMax();
+        }
     }
 
     // =========================================内部辅助函数===========================================
@@ -267,7 +304,7 @@ public class CompleteBinaryHeap<E> implements PriorityQueue<E>{
      * 获得当前向量末尾下标
      * */
     private int getLastIndex(){
-        return this.innerArrayList.size() - 1;
+        return this.size - 1;
     }
 
     /**
