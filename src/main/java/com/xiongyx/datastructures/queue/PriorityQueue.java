@@ -1,7 +1,5 @@
 package com.xiongyx.datastructures.queue;
 
-import com.xiongyx.datastructures.iterator.Iterator;
-
 /**
  * @Author xiongyx
  * @Date 2019/2/15

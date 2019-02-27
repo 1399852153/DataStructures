@@ -89,6 +89,8 @@ public class CompleteBinaryHeap<E> implements PriorityQueue<E>{
         this.innerArrayList = new ArrayList<>(array);
         this.comparator = comparator;
 
+        this.size = array.length;
+
         // 批量建堆
         heapify();
     }
