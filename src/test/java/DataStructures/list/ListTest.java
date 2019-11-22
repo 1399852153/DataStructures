@@ -2,6 +2,7 @@ package DataStructures.list;
 
 
 import com.xiongyx.datastructures.iterator.Iterator;
+import com.xiongyx.datastructures.list.ArrayList;
 import com.xiongyx.datastructures.list.LinkedList;
 
 /**
@@ -14,7 +15,7 @@ public class ListTest {
     }
 
     private static void testArrayList(){
-        LinkedList<Integer> list = new LinkedList<>();
+        ArrayList<Integer> list = new ArrayList<>();
 
         for(int i=0; i<20; i++){
             list.add(i);
@@ -26,7 +27,8 @@ public class ListTest {
         Iterator<Integer> iterator = list.iterator();
         while (iterator.hasNext()){
             int data = iterator.next();
-            if(data % 3 == 0){
+            System.out.print(data);
+            if(data % 1 == 0){
                 iterator.remove();
 
                 System.out.print("移除了:" + data);

@@ -23,7 +23,7 @@ public class LinkedListStack<E> implements Stack<E>{
 
     @Override
     public boolean push(E e) {
-        //:::将新元素插入内部链表末尾(入栈)
+        // 将新元素插入内部链表末尾(入栈)
         innerLinkedList.add(e);
 
         return true;
@@ -35,10 +35,10 @@ public class LinkedListStack<E> implements Stack<E>{
             throw new CollectionEmptyException("Stack already empty");
         }
 
-        //:::内部链表末尾下标
+        // 内部链表末尾下标
         int lastIndex = innerLinkedList.size() - 1;
 
-        //:::将链表末尾处元素删除并返回(出栈)
+        // 将链表末尾处元素删除并返回(出栈)
         return innerLinkedList.remove(lastIndex);
     }
 
@@ -48,10 +48,10 @@ public class LinkedListStack<E> implements Stack<E>{
             throw new CollectionEmptyException("Stack already empty");
         }
 
-        //:::内部链表末尾下标
+        // 内部链表末尾下标
         int lastIndex = innerLinkedList.size() - 1;
 
-        //:::返回链表末尾处元素(窥视)
+        // 返回链表末尾处元素(窥视)
         return innerLinkedList.get(lastIndex);
     }
 

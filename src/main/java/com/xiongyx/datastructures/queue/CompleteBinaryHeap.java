@@ -146,21 +146,21 @@ public class CompleteBinaryHeap<E> implements PriorityQueue<E>{
 
     @Override
     public String toString() {
-        //:::空列表
+        // 空列表
         if(this.isEmpty()){
             return "[]";
         }
 
-        //:::列表起始使用"["
+        // 列表起始使用"["
         StringBuilder s = new StringBuilder("[");
 
-        //:::从第一个到倒数第二个元素之间
+        // 从第一个到倒数第二个元素之间
         for(int i=0; i<size-1; i++){
-            //:::使用", "进行分割
+            // 使用", "进行分割
             s.append(this.innerArrayList.get(i)).append(",").append(" ");
         }
 
-        //:::最后一个元素使用"]"结尾
+        // 最后一个元素使用"]"结尾
         s.append(this.innerArrayList.get(size-1)).append("]");
         return s.toString();
     }

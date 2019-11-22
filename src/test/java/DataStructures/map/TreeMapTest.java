@@ -11,7 +11,7 @@ import com.xiongyx.datastructures.map.TreeMap;
  */
 public class TreeMapTest {
     public static void main(String[] args){
-        //:::反向比较
+        // 反向比较
         TreeMap<Integer,String> treeMap = new TreeMap<>(
             (o1, o2) -> -(o1.compareTo(o2))
         );

@@ -2,10 +2,15 @@ package DataStructures.queue;
 
 import com.xiongyx.datastructures.queue.ArrayDeque;
 import com.xiongyx.datastructures.queue.Deque;
+import java.util.ArrayList;
+import java.util.List;
 
 public class QueueTest {
 
     public static void main(String[] args){
+        List<Integer> list = new ArrayList();
+        list.stream().count();
+
         testQueue();
     }
 

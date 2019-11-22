@@ -30,7 +30,7 @@ public class VectorStack <E> implements Stack<E>{
 
     @Override
     public boolean push(E e) {
-        //:::将新元素插入内部向量末尾(入栈)
+        // 将新元素插入内部向量末尾(入栈)
         innerArrayList.add(e);
 
         return true;
@@ -42,10 +42,10 @@ public class VectorStack <E> implements Stack<E>{
             throw new CollectionEmptyException("Stack already empty");
         }
 
-        //:::内部向量末尾下标
+        // 内部向量末尾下标
         int lastIndex = innerArrayList.size() - 1;
 
-        //:::将向量末尾处元素删除并返回(出栈)
+        // 将向量末尾处元素删除并返回(出栈)
         return innerArrayList.remove(lastIndex);
     }
 
@@ -55,10 +55,10 @@ public class VectorStack <E> implements Stack<E>{
             throw new CollectionEmptyException("Stack already empty");
         }
 
-        //:::内部向量末尾下标
+        // 内部向量末尾下标
         int lastIndex = innerArrayList.size() - 1;
 
-        //:::返回向量末尾处元素(窥视)
+        // 返回向量末尾处元素(窥视)
         return innerArrayList.get(lastIndex);
     }
 
