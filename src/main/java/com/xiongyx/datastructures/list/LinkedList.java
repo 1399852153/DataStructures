@@ -362,20 +362,6 @@ public class LinkedList <E> implements List <E>{
         }
 
         /**
-         * 将一个节点作为"当前节点"的"右节点" 插入链表
-         * @param node  需要插入的节点
-         * */
-        private void linkAsRight(Node<T> node){
-            // 先设置新增节点的 左右节点
-            node.left = this;
-            node.right = this.right;
-
-            // 将新增节点插入 当前节点和当前节点的左节点之间
-            node.right.left = node;
-            node.right = node;
-        }
-
-        /**
          * 将"当前节点"移出链表
          * */
         private void unlinkSelf(){
