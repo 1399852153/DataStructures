@@ -587,5 +587,10 @@ public class SkipListMap<K,V> extends AbstractMap<K,V>{
         System.out.println(skipListMap);
         System.out.println(skipListMap.getAllListToString());
         System.out.println("maxLevel = " + skipListMap.maxLevel + " size=" + skipListMap.size());
+
+        skipListMap.clear();
+        System.out.println(skipListMap);
+        System.out.println(skipListMap.getAllListToString());
+        System.out.println("maxLevel = " + skipListMap.maxLevel + " size=" + skipListMap.size());
     }
 }
