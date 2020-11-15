@@ -185,7 +185,7 @@ public class SkipListMap<K,V> extends AbstractMap<K,V>{
             this.lastReturned = null;
 
             // 将节点从水平链表中移除
-            nodeWillRemove.unlinkSelfHorizontal();
+            removeNode(nodeWillRemove.getKey());
         }
     }
 
@@ -261,7 +261,11 @@ public class SkipListMap<K,V> extends AbstractMap<K,V>{
     }
 
     private Node<K,V> removeNode(K key){
-        Node<K,V>needRemoveNode = searchNode(key);
+        Node<K,V> needRemoveNode = searchNode(key);
+        return removeNode(needRemoveNode);
+    }
+
+    private Node<K,V> removeNode(Node<K,V>needRemoveNode){
         if (needRemoveNode == null){
             // 如果没有找到对应的节点，不需要删除，直接返回
             return null;
@@ -371,6 +375,10 @@ public class SkipListMap<K,V> extends AbstractMap<K,V>{
             // 令下一层的左右哨兵节点的up节点清空
             levelLeftSentinelNode.down.up = null;
             levelRightSentinelNode.down.up = null;
+
+            // 令跳表的head/tail指向最高层的左右哨兵
+            this.head = levelLeftSentinelNode.down;
+            this.tail = levelRightSentinelNode.down;
         }else{
             // 需要删除的是中间层
 
@@ -550,21 +558,34 @@ public class SkipListMap<K,V> extends AbstractMap<K,V>{
         int max = 1000;
         int mustExist = 37;
         skipListMap.put(mustExist,defaultValue);
-        for(int i=1; i<100; i++){
+        for(int i=1; i<10; i++){
             skipListMap.put((int)(Math.random() * max),defaultValue);
         }
 //        System.out.println(list.getLowestListToString());
         System.out.println(skipListMap.getAllListToString());
         System.out.println("maxLevel = " + skipListMap.maxLevel + " size=" + skipListMap.size());
-        System.out.println("mustExist find:" + skipListMap.searchNode(mustExist));
-        skipListMap.remove(mustExist);
-        System.out.println("mustExist find after remove:" + skipListMap.searchNode(mustExist));
-
-        int maybeExist = 233;
-        System.out.println("maybeExist find:" + skipListMap.searchNode(maybeExist));
-        skipListMap.remove(maybeExist);
-        System.out.println("maybeExist find after remove:" + skipListMap.searchNode(maybeExist));
+//        System.out.println("maxLevel = " + skipListMap.maxLevel + " size=" + skipListMap.size());
+//        System.out.println("mustExist removed=" + skipListMap.remove(mustExist));
+//        skipListMap.remove(mustExist);
+//        System.out.println("mustExist find after remove:" + skipListMap.searchNode(mustExist));
+//
+//        int maybeExist = 233;
+//        System.out.println("maybeExist find:" + skipListMap.searchNode(maybeExist));
+//        System.out.println("maybeExist removed=" + skipListMap.remove(maybeExist));
+//        System.out.println("maybeExist find after remove:" + skipListMap.searchNode(maybeExist));
 
         System.out.println(skipListMap);
+
+        Iterator<EntryNode<Integer,String>> iterator = skipListMap.iterator();
+        while(iterator.hasNext()){
+            Map.EntryNode<Integer,String> entry = iterator.next();
+            if(entry.getKey() % 2 == 0){
+                System.out.println("删除key entry="+entry);
+                iterator.remove();
+            }
+        }
+        System.out.println(skipListMap);
+        System.out.println(skipListMap.getAllListToString());
+        System.out.println("maxLevel = " + skipListMap.maxLevel + " size=" + skipListMap.size());
     }
 }
