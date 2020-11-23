@@ -385,7 +385,7 @@ public class SkipListMap<K,V> extends AbstractMap<K,V>{
             // 移除当前水平层左哨兵，令其上下节点建立连接
             levelLeftSentinelNode.unlinkSelfVertical();
             // 移除当前水平层右哨兵，令其上下节点建立连接
-            levelRightSentinelNode.unlinkSelfHorizontal();
+            levelRightSentinelNode.unlinkSelfVertical();
         }
     }
 
@@ -558,7 +558,7 @@ public class SkipListMap<K,V> extends AbstractMap<K,V>{
         int max = 1000;
         int mustExist = 37;
         skipListMap.put(mustExist,defaultValue);
-        for(int i=1; i<10; i++){
+        for(int i=1; i<100; i++){
             skipListMap.put((int)(Math.random() * max),defaultValue);
         }
 //        System.out.println(list.getLowestListToString());
@@ -579,8 +579,8 @@ public class SkipListMap<K,V> extends AbstractMap<K,V>{
         Iterator<EntryNode<Integer,String>> iterator = skipListMap.iterator();
         while(iterator.hasNext()){
             Map.EntryNode<Integer,String> entry = iterator.next();
-            if(entry.getKey() % 2 == 0){
-                System.out.println("删除key entry="+entry);
+            if(entry.getKey() % 2 == 0 || entry.getKey() % 3 == 0){
+//                System.out.println("删除key entry="+entry);
                 iterator.remove();
             }
         }
