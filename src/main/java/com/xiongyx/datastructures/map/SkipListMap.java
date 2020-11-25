@@ -189,7 +189,10 @@ public class SkipListMap<K,V> extends AbstractMap<K,V>{
         }
     }
 
-
+    /**
+     * 找到key对应的数据节点
+     * 如果没有找到，返回null
+     * */
     private Node<K,V> searchNode(K key){
         Node<K,V> preNode = findPredecessorNode(key);
         if(preNode.key != null && Objects.equals(preNode.key,key)){
@@ -265,7 +268,7 @@ public class SkipListMap<K,V> extends AbstractMap<K,V>{
         return removeNode(needRemoveNode);
     }
 
-    private Node<K,V> removeNode(Node<K,V>needRemoveNode){
+    private Node<K,V> removeNode(Node<K,V> needRemoveNode){
         if (needRemoveNode == null){
             // 如果没有找到对应的节点，不需要删除，直接返回
             return null;
@@ -302,6 +305,10 @@ public class SkipListMap<K,V> extends AbstractMap<K,V>{
         return returnCache;
     }
 
+    /**
+     * 找到最逼近参数key的前驱数据节点
+     * (返回的节点的key并不一定等于参数key，也有可能是最逼近的)
+     * */
     private Node<K,V> findPredecessorNode(K key){
         // 从跳表头结点开始，从上层到下层逐步逼近
         Node<K,V> currentNode = head;
@@ -319,7 +326,7 @@ public class SkipListMap<K,V> extends AbstractMap<K,V>{
                 currentNode = currentNode.down;
             }else{
                 // currentNode.down == null，说明到了最下层保留实际节点的，直接返回
-                // （currentNode.data并不一定等于参数data，可能是最逼近的前缀节点）
+                // （currentNode.key并不一定等于参数key，可能是最逼近的前缀节点）
                 return currentNode;
             }
         }
